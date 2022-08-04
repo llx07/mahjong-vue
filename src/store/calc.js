@@ -285,7 +285,11 @@ class MenzenTsumo{
     }
 }
 class TanYao{
-    test(handSet){
+    test(handSet, rule){
+        if(!rule.shiDuan)
+            if(test(handSet.flag,MENZEN|TSUMO)){
+                return 1;
+            }
         for(const b of handSet.blocks){
             if(b.consistYao()){
                 return 0;
@@ -915,7 +919,7 @@ class Suuankou{
     }
 }
 class SuuankouTanki{
-    test(handSet){
+    test(handSet,rule){
         if(!test(handSet.flag,MENZEN))return 0
         let cnt = 0
         for(const b of handSet.blocks){
@@ -923,7 +927,7 @@ class SuuankouTanki{
         }
         if(cnt==4 && 
             handSet.agariPai.equalTo(handSet.pair.getPai()[0])){
-            return 2
+            return rule.duoBeiYiMan?2:1;
         }
         return 0;
     }
@@ -947,12 +951,12 @@ class Shousuushi{
     }
 }
 class Daisuushi{
-    test(handSet){
+    test(handSet,rule){
         let cnt = 0
         for(const b of handSet.blocks){
             if(b.pType=='z' && 1<=b.num && b.num<=4)cnt++
         }
-        if(cnt==4)return 2
+        if(cnt==4)return rule.duoBeiYiMan?2:1;
         return 0
     }
     getName(){
@@ -1036,7 +1040,7 @@ class ChuurenPoutou{
     }
 }
 class JunseiChuurenPoutou{
-    test(handSet){
+    test(handSet,rule){
         if(!test(handSet.flag,MENZEN))return 0
         if(!new Chiniisou().test(handSet))return 0;
         
@@ -1059,7 +1063,7 @@ class JunseiChuurenPoutou{
             if(cnt[i]==needNum[i]+1)mulNum = i
         }
 
-        if(mulNum == handSet.agariPai.num)return 2;
+        if(mulNum == handSet.agariPai.num)return rule.duoBeiYiMan?2:1;
         return 0;
     }
     getName(){
@@ -1136,6 +1140,7 @@ export class Result{
 //TODO 单例
 export class Calculator{
     constructor(){
+        this.rule = new Rule();
         this.yakus = [
             new MenzenTsumo(),
             new TanYao(),
@@ -1204,8 +1209,10 @@ export class Calculator{
         res.yaku.splice(0)
         let cnt = 0;
         for(const x of this.yakumanYakus){
-            let p = x.test(hand)
-            cnt += p
+            // Some functions only have one param, JS just ignore the second param(rule)
+            let p = x.test(hand,this.rule) 
+            if(this.rule.fuHeYiMan)cnt += p
+            else cnt=max(cnt,p);
             if(p != 0){
                 res.yaku.push(x.getName())
                 res.isYakuman = true
@@ -1217,7 +1224,8 @@ export class Calculator{
         }
 
         for(const x of this.yakus){
-            let p = x.test(hand)
+            // Some functions only have one param, JS just ignore the second param(rule)
+            let p = x.test(hand, this.rule)
             cnt+=p
             if(p!=0){
                 res.yaku.push(
@@ -1250,7 +1258,10 @@ export class Calculator{
             fu+=baseFu
         }
 
-        fu += hand.pair.getPai()[0].isYakuhai(hand.flag)*2
+        if(this.rule.lianFeng4)
+            fu += hand.pair.getPai()[0].isYakuhai(hand.flag)*2
+        else
+            fu += max(1,hand.pair.getPai()[0].isYakuhai(hand.flag)) *2
 
         if(fu==20)fu=30
 
@@ -1280,11 +1291,11 @@ export class Calculator{
             x.manType = BAIMAN;
             basePoint = 4000;
         } 
-        else if (11 <= x.han && x.han <= 12) {
+        else if (11 <= x.han && x.han <= 12 || x.han>=13 && !this.rule.allowLeiMan) {
             x.manType = SANBAIMAN;
             basePoint = 6000;
         }
-        else if (x.han >= 13) {
+        else if (x.han >= 13 && this.rule.allowLeiMan) {
             x.manType = KAZOEYAKUMAN;
             basePoint = 8000;
         }
@@ -1595,7 +1606,8 @@ export class Calculator{
         this._calculatePoint(this.nowHandSet,res)
         this.result = res
     }
-    calculate(state){
+    calculate(state,rule=new Rule()){
+        this.rule=rule;
         this.nowHandSet = new HandSet([],
             undefined,undefined,undefined,undefined,
             undefined,undefined,undefined,undefined)

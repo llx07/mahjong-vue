@@ -5,20 +5,39 @@
       <router-link to="/practice">点数练习</router-link>
     </nav>
     <div class="flex"></div>
-    <img src="@/assets/setting.svg" id="setting"/>
+    <img src="@/assets/setting.svg" id="setting" @click="showSetting=!showSetting"/>
   </header>
   <div id="content">
-    <router-view/>
+    <router-view :rule="rule"/>
   </div>
+
+  <setting-select v-if="showSetting" @update="updateSetting"/>
+
 </template>
 
 <script>
+  import { Rule } from './store/calc'
+  import SettingSelect from './components/SettingSelect.vue'
   export default{
     name:"App",
+    data(){
+      return {
+        rule:new Rule(),
+        showSetting:false
+      }
+    },
+    components: {
+      SettingSelect
+    },
+    methods:{
+      updateSetting(x){
+        this.rule=x;
+      }
+    }
   }
 </script>
 
-<style>
+<style scoped>
   nav {
     height: 40px;
     line-height: 40px;

@@ -1212,7 +1212,7 @@ export class Calculator{
             // Some functions only have one param, JS just ignore the second param(rule)
             let p = x.test(hand,this.rule) 
             if(this.rule.fuHeYiMan)cnt += p
-            else cnt=max(cnt,p);
+            else cnt=Math.max(cnt,p);
             if(p != 0){
                 res.yaku.push(x.getName())
                 res.isYakuman = true
@@ -1261,7 +1261,7 @@ export class Calculator{
         if(this.rule.lianFeng4)
             fu += hand.pair.getPai()[0].isYakuhai(hand.flag)*2
         else
-            fu += max(1,hand.pair.getPai()[0].isYakuhai(hand.flag)) *2
+            fu += Math.min(1,hand.pair.getPai()[0].isYakuhai(hand.flag)) *2
 
         if(fu==20)fu=30
 

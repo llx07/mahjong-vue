@@ -1,4 +1,6 @@
 <template>
+  Your Choice {{rule}}
+
   <div v-for="row in paiName" :key="row" class="flex-row">
       <pai-select v-for="pai in row" :key="pai" 
         :name="pai" @click="add(pai)" :class="{disabled:isDisable[pai]}"></pai-select>
@@ -89,6 +91,9 @@ export default {
   components: {
     PaiSelect,
     BlockSelect
+  },
+  props:{
+    rule:calc.Rule
   },
   data() {
     return {
@@ -207,7 +212,7 @@ export default {
       )
 
       let c = new calc.Calculator()
-      this.result = c.calculate(s)
+      this.result = c.calculate(s,this.rule)
     },
     updateYaku(name){
       this.yakus.splice(this.yakus.findIndex((x)=>{return x==name}),1)

@@ -11,7 +11,7 @@
     <router-view :rule="rule"/>
   </div>
 
-  <setting-select v-if="showSetting" @update="updateSetting"/>
+  <setting-select v-if="showSetting" v-model="rule"/>
 
 </template>
 
@@ -28,6 +28,11 @@
     },
     components: {
       SettingSelect
+    },
+    created(){
+      if(localStorage.getItem('rule')!=null){
+        this.rule = JSON.parse(localStorage.getItem('rule'))
+      }
     },
     methods:{
       updateSetting(x){

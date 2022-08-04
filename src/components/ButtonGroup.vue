@@ -10,7 +10,7 @@
   export default{
     name:"ButtonTwo",
     emits:[
-      "change"
+      "update:modelValue"
     ],
     props:{
       values:{
@@ -18,20 +18,17 @@
         required:true,
       },
       label:String,
-      init:{
-        type: Number,
-        default:0,
-      }
+      modelValue:Number
     },
     data(){
       return{
-        now:this.init
+        now:this.modelValue
       }
     },
     methods:{
       changeIndex(index){
         this.now=index
-        this.$emit('change',index)
+        this.$emit('update:modelValue',index)
       }
     }
   }

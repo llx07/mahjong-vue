@@ -93,7 +93,7 @@ export default {
     BlockSelect
   },
   props:{
-    rule:calc.Rule
+    rule:Object
   },
   data() {
     return {
@@ -179,9 +179,9 @@ export default {
         if(x=="riichi")return calc.RIICHI
         if(x=="double-riichi")return calc.DOUBLE_RIICHI
         if(x=="ippatsu")return calc.IPPATSU
-        if(x=="haite")return calc.HAITE
-        if(x=="houte")return calc.HOUTE
-        if(x=="rinnshann")return calc.RINNSHANN
+        if(x=="haite")return calc.HAITEI_RAOYUE
+        if(x=="houte")return calc.HOUTEI_RAOYUI
+        if(x=="rinnshann")return calc.RINNSHANN_KAIHOU
         if(x=="chankan")return calc.CHANKAN
         if(x=="tenhou")return calc.TENHOU
         if(x=="chiihou")return calc.CHIIHOU

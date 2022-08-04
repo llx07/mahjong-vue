@@ -79,10 +79,10 @@
 </template>
 
 <script>
-import PaiSelect from './components/PaiSelect.vue'
-import BlockSelect from './components/BlockSelect.vue'
-import * as util from './store/util.js'
-import * as calc from './store/calc'
+import PaiSelect from '../components/PaiSelect.vue'
+import BlockSelect from '../components/BlockSelect.vue'
+import * as util from '../store/util.js'
+import * as calc from '../store/calc'
 
 export default {
   name: 'App',

@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
-// import { Router } from 'vue-router'
-import Calculator from './Calculator.vue'
 
-createApp(Calculator).mount('#app')
+import App from './App.vue'
+
+import router from './router'
+
+createApp(App).use(router).mount('#app')

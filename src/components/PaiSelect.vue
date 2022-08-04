@@ -16,6 +16,7 @@
   img{
     height: 100px ;
     display:block;
+    cursor: pointer;
   }
 
   .horiz{

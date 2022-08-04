@@ -287,9 +287,8 @@ class MenzenTsumo{
 class TanYao{
     test(handSet, rule){
         if(!rule.shiDuan)
-            if(test(handSet.flag,MENZEN|TSUMO)){
-                return 1;
-            }
+            if(!test(handSet.flag,MENZEN))return 0
+        
         for(const b of handSet.blocks){
             if(b.consistYao()){
                 return 0;
@@ -1116,11 +1115,11 @@ export const KAZOEYAKUMAN = 5
 // 可选的规则
 export class Rule{
     constructor(){
-        this.shiDuan = true;
-        this.duoBeiYiMan = true;
-        this.fuHeYiMan = true;
-        this.lianFeng4 = true;
-        this.allowLeiMan = true;
+        this.shiDuan = 1;
+        this.duoBeiYiMan = 1;
+        this.fuHeYiMan = 1;
+        this.lianFeng4 = 1;
+        this.allowLeiMan = 1;
     }
 }
 

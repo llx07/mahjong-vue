@@ -1,83 +1,103 @@
-<template>
-  Your Choice {{rule}}
-
-  <div v-for="row in paiName" :key="row" class="flex-row">
-      <pai-select v-for="pai in row" :key="pai" 
-        :name="pai" @click="add(pai)" :class="{disabled:isDisable[pai]}"></pai-select>
-  </div>
-
-  <select v-model="mode">
-    <option value="pai">手牌</option>
-    <option value="chi">吃</option>
-    <option value="pon">碰</option>
-    <option value="kan">杠</option>
-    <option value="ankan">暗杠</option>
-    <option value="dora">宝牌指示牌</option>
-    <option value="ura">里宝牌指示牌</option>
-  </select>
-  <select v-model="agariWay">
-    <option value="tsumo">自摸</option>
-    <option value="ron">荣和</option>
-  </select>
-  <select v-model="field">
-    <option value="east">东</option>
-    <option value="south">南</option>
-    <option value="west">西</option>
-    <option value="north">北</option>
-  </select>
-  <select v-model="seat">
-    <option value="east">东</option>
-    <option value="south">南</option>
-    <option value="west">西</option>
-    <option value="north">北</option>
-  </select>
-
+<template>  
   <div class="flex-row">
-    <div v-for="item in yakuName" :key="item.value">
-        <input type="checkbox" v-model="yakus" :id="item.value" 
-          :value="item.value" :disabled="isYakuDisable[item.value]">
-        <label :for="item.value">{{item.name}}</label>
+    <div>
+      <div v-for="row in paiName" :key="row" class="flex-row">
+        <pai-select v-for="pai in row" :key="pai" 
+          :name="pai" @click="add(pai)" :class="{disabled:isDisable[pai]}"></pai-select>
+      </div>
+    </div>
+    <div class="flex-row">
+      <div class="flex-col class1">
+        <n-button class="btn" @click="clearAll()" type="error" ghost size="large">清空</n-button>
+        <n-button class="btn" @click="myCalculate()" type="primary" ghost size="large"
+         :disabled="!calculateEnable">计算</n-button>
+        <n-divider class="line"/>
+        <n-grid :cols="3" :y-gap="3">
+          <n-grid-item>加入类型</n-grid-item>
+          <n-grid-item :span="2"><n-select v-model:value="mode" :options="optionMode"/></n-grid-item>
+          <n-grid-item>和了方式</n-grid-item>
+          <n-grid-item :span="2"><n-select v-model:value="agariWay" :options="optionAgariWay"/></n-grid-item>
+          <n-grid-item>场风</n-grid-item>
+          <n-grid-item :span="2"><n-select v-model:value="field" :options="optionWind"/></n-grid-item>
+          <n-grid-item>自风</n-grid-item>
+          <n-grid-item :span="2"><n-select v-model:value="seat" :options="optionWind"/></n-grid-item>
+        </n-grid>
+        <n-divider class="line"/>
+        
+        <n-grid :cols="3" :y-gap="3">
+          <n-grid-item>赤宝牌</n-grid-item>
+          <n-grid-item :span="2"><n-input-number v-model:value="red" size="large" :min="0"/></n-grid-item>
+          <n-grid-item>本场</n-grid-item>
+          <n-grid-item :span="2"><n-input-number v-model:value="ponba" size="large" :min="0" /></n-grid-item>
+        </n-grid>
+      </div>
+      <n-checkbox-group v-model:value="yakus" class="flex-col">
+          <n-checkbox v-for="item in yakuName" :key="item.value" size="large"
+            :value="item.value" :label="item.name" :disabled="isYakuDisable[item.value]"/>
+      </n-checkbox-group>
+    </div>
+
+    <div id="result">
+      <div v-if="isTrueAgari">
+        <div class="number">
+          <div v-if="result.pointType==2">{{result.point1}} / {{result.point2}}</div>
+          <div v-else-if="result.pointType==0">{{result.point1}} ALL</div>
+          <div v-else>{{result.point1}}</div>
+        </div>
+        <div v-if="!result.isYakuman">{{result.han}}番
+          <span v-if="needFu">{{result.fu}}符</span>
+          {{manName}}
+        </div>
+        <div v-else>{{result.han}}倍役满</div>
+        <ul>
+          <li v-for="(name,index) in result.yaku" :key="index">
+            {{name}}
+          </li>
+        </ul>
+      </div>
+      <div v-else>
+        <div class="number">
+          无役/无和牌型
+        </div>
+      </div>
     </div>
   </div>
 
-  <button class="btn" @click="clearAll()">清空</button>
-  <button class="btn" @click="myCalculate()">计算</button>
-
   <div class="flex-row">
+    <div class="flex-col flex nospace">
       手牌
-      <pai-select v-for="(pai,index) in hand" :key="index" 
-        :name="pai" @click="removeSingle(hand,pai)"></pai-select>
+      <div class="box nospace">
+        <pai-select v-for="(pai,index) in hand" :key="index" 
+          :name="pai" @click="removeSingle(hand,pai)"></pai-select>
+      </div>
+    </div>
+    <div class="flex-col flex nospace">
+        副露
+      <div class="box nospace">
+        <block-select v-for="(item, index) in furo" :key="index"
+          :type="item.type" :name="item.name" @click="removeMulti(item)"></block-select>
+      </div>
+    </div>
   </div>
+  
   <div class="flex-row">
-      副露
-      <block-select v-for="(item, index) in furo" :key="index"
-        :type="item.type" :name="item.name"></block-select>
-  </div>
-  <div class="flex-row">
+    <div class="flex-col flex nospace">
       宝牌指示牌 
-      <pai-select v-for="(pai,index) in dora" :key="index" 
-        :name="pai" @click="removeSingle(dora,pai)"></pai-select>
-  </div>
-  <div class="flex-row">
+      <div class="box nospace">
+        <pai-select v-for="(pai,index) in dora" :key="index" 
+          :name="pai" @click="removeSingle(dora,pai)"></pai-select>
+      </div>
+    </div>
+    <div class="flex-col flex nospace">
       里宝牌指示牌
-      <pai-select v-for="(pai,index) in ura" :key="index" 
-        :name="pai" @click="removeSingle(ura,pai)"></pai-select>
+      <div class="box nospace">
+        <pai-select v-for="(pai,index) in ura" :key="index" 
+          :name="pai" @click="removeSingle(ura,pai)"></pai-select>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <div v-if="result.pointType==2">{{result.point1}} / {{result.point2}}</div>
-    <div v-else-if="result.pointType==0">{{result.point1}} ALL</div>
-    <div v-else>{{result.point1}}</div>
-    
-    <div v-if="!result.isYakuman">{{result.han}}番 {{result.fu}}符</div>
-    <div v-else>{{result.han}}倍役满</div>
-    
-    <ul>
-      <li v-for="(name,index) in result.yaku" :key="index">
-        {{name}}
-      </li>
-    </ul>
-  </div>
+  
 </template>
 
 <script>
@@ -85,12 +105,18 @@ import PaiSelect from '../components/PaiSelect.vue'
 import BlockSelect from '../components/BlockSelect.vue'
 import * as util from '../store/util.js'
 import * as calc from '../store/calc'
+import { NButton, NSelect, NDivider, NCheckboxGroup, NCheckbox, NGrid, NGridItem, NInputNumber} from 'naive-ui'
 
 export default {
   name: 'App',
   components: {
     PaiSelect,
-    BlockSelect
+    BlockSelect,
+    NButton,
+    NSelect,
+    NDivider,
+    NCheckboxGroup,
+    NCheckbox, NGrid, NGridItem, NInputNumber
   },
   props:{
     rule:Object
@@ -102,6 +128,25 @@ export default {
         ['1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s'],
         ['1m', '2m', '3m', '4m', '5m', '6m', '7m', '8m', '9m'],
         ['1z', '2z', '3z', '4z', '5z', '6z', '7z']
+      ],
+      optionMode:[
+        {label:"手牌", value:"pai"},
+        {label:"吃", value:"chi"},
+        {label:"碰", value:"pon"},
+        {label:"杠", value:"kan"},
+        {label:"暗杠", value:"ankan"},
+        {label:"宝牌指示牌", value:"dora"},
+        {label:"里宝牌指示牌", value:"ura"},
+      ],
+      optionAgariWay:[
+        {label:"自摸", value:"tsumo"},
+        {label:"荣和", value:"ron"},
+      ],
+      optionWind:[
+        {label:"东", value:"east"},
+        {label:"南", value:"south"},
+        {label:"西", value:"west"},
+        {label:"北", value:"north"},
       ],
       yakuName:[
         {value:"riichi", name:"立直"},
@@ -123,7 +168,9 @@ export default {
       agariWay:"tsumo",
       field:"east",
       seat:"east",
-      result:new calc.Result()
+      red:0,
+      ponba:0,
+      result:new calc.Result(),
     }
   },
   methods:{
@@ -144,6 +191,10 @@ export default {
     removeSingle(obj, name){
       // TODO 在hand为11p234s1p时，点击最后一个1p会删除第一个1p
       obj.splice(this.hand.findIndex((x)=>{return x==name}),1)
+    },
+    removeMulti(name){
+      // TODO 在hand为11p234s1p时，点击最后一个1p会删除第一个1p
+      this.furo.splice(this.hand.findIndex((x)=>{return x==name}),1)
     },
     clearAll(){
       this.hand=[],
@@ -208,11 +259,19 @@ export default {
       for(const y of this.yakus)tYaku.push(cvtYaku(y));
 
       let s = new calc.State(
-        tField,tSeat,tYaku,tAgariWay,tPai,tBlock,tDora,tUra,tAgariPai,0
+        tField,tSeat,tYaku,tAgariWay,tPai,tBlock,tDora,tUra,tAgariPai,this.red
       )
 
       let c = new calc.Calculator()
       this.result = c.calculate(s,this.rule)
+
+      if(this.agariWay=='tsumo'){
+        this.result.point1 += 100*this.ponba;
+        this.result.point2 += 100*this.ponba;
+      }
+      else{
+        this.result.point1 += 300*this.ponba;
+      }
     },
     updateYaku(name){
       this.yakus.splice(this.yakus.findIndex((x)=>{return x==name}),1)
@@ -419,6 +478,38 @@ export default {
       }
 
       return stat
+    },
+    needFu(){
+      if(this.result.manType==0)return true;
+      if(this.result.manType>=2)return false;
+      if(this.result.han==5)return false;
+      return true;
+    },
+    manName(){
+      if(this.result.manType==0)return ''
+      if(this.result.manType==1)return '满贯'
+      if(this.result.manType==2)return '跳满'
+      if(this.result.manType==3)return '倍满'
+      if(this.result.manType==4)return '三倍满'
+      if(this.result.manType==5)return '累计役满'
+      return ''
+    },
+    calculateEnable(){
+      return this.hand.length+this.furo.length*3==14
+    },
+    isTrueAgari(){
+      if(this.result.han==0)return 0;
+
+      let hasExceptDora=false;
+      for(const name of this.result.yaku){
+        console.log(name)
+        if(name.startsWith("宝牌"))continue;
+        if(name.startsWith("里宝牌"))continue;
+        if(name.startsWith("赤宝牌"))continue;
+        if(name.startsWith("红宝牌"))continue;
+        hasExceptDora = true;
+      }
+      return hasExceptDora
     }
   }
 }
@@ -428,5 +519,39 @@ export default {
   .flex-row{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .flex-col{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  .flex{
+    flex:auto
+  }
+  .flex-row:not(.nospace)>div,.flex-col:not(.nospace)>*{
+    margin: 2px;
+  }
+  .class1{
+    width: 250px;
+  }
+  .line{
+    margin: 5px 0px;
+  }
+  .number{
+    font-size:50px;
+  }
+  #result{
+    padding: 5px;
+    flex:auto;
+    border: 3px solid black;
+  }
+  .box{
+    align-items: flex-start;
+    border: 2px dashed grey;
+    padding: 0.2rem;
+    min-height:100px;
+    display: flex;
+    flex-wrap: wrap;
   }
 </style>

@@ -11,7 +11,9 @@
     <router-view :rule="rule"/>
   </div>
 
-  <setting-select v-if="showSetting" v-model="rule"/>
+  <div id="modal" v-if="showSetting">
+    <setting-select v-model="rule" @close="showSetting=false"/>
+  </div>
 
 </template>
 
@@ -54,10 +56,11 @@
     text-align: center;
     background-color:aliceblue;
     position: fixed;
-    width: 100%;
+    width: calc(100% - 20px);
     top: 0;
     left:0;
     display: flex;
+    padding: 0 10px;
   }
 
   nav a {
@@ -78,5 +81,17 @@
 
   #setting{
     height: 40px;
+    cursor: pointer;
+  }
+
+  #modal::before{
+    content: "";
+    background-color: rgba(0,0,0,0.5);
+    z-index: 5;
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height: 100%;
   }
 </style>

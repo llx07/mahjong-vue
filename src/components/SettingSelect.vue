@@ -1,6 +1,8 @@
 <template>
 
   <div id="modal-root">
+    设置
+    <span id="close-btn" @click="$emit('close')">X</span>
     <button-group label="食断" :values='["有","无"]' v-model="i1"/>
     <button-group label="多倍役满" :values='["有","无"]' v-model="i2"/>
     <button-group label="复合役满" :values='["有","无"]' v-model="i3"/>
@@ -18,7 +20,7 @@
       ButtonGroup
     },
     emits:[
-      "update:modelValue",
+      "update:modelValue","close"
     ],
     props:{
       modelValue:{
@@ -33,7 +35,7 @@
         i2: + !this.modelValue.duoBeiYiMan,
         i3: + !this.modelValue.fuHeYiMan,
         i4: + this.modelValue.lianFeng4,
-        i5: + this.modelValue.allowLeiMan,
+        i5: + !this.modelValue.allowLeiMan,
       }
     },
     computed:{
@@ -47,7 +49,7 @@
         this.ruleLocal.duoBeiYiMan=!this.i2
         this.ruleLocal.fuHeYiMan=!this.i3
         this.ruleLocal.lianFeng4=!!this.i4
-        this.ruleLocal.allowLeiMan=!!this.i5
+        this.ruleLocal.allowLeiMan=!this.i5
         this.$emit('update:modelValue',this.ruleLocal)
         localStorage.setItem("rule",JSON.stringify(this.ruleLocal))
       },
@@ -70,5 +72,13 @@
     background-color: linen;
     z-index: 10;
     transform: translate(-50%,-50%);
+  }
+  #close-btn{
+    position: fixed;
+    right: 2px;
+    top:0;
+    padding: 5px;
+    font-size: 20px;
+    cursor: pointer;
   }
 </style>

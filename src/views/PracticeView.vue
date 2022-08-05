@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.problem!=null">
+  <div v-if="this.problem!=null" >
     <div class="flex-row">
       <pai-select v-for="(name,index) in hand" :key="index" :name="name"/>
       <div class="spacer"></div>
@@ -27,12 +27,23 @@
       </div>
       <div class="flex-col flex">
         {{hintText}}
-        <n-input size="large" class="flex"
+        <n-input  v-if="hintText=='输入答案'" size="large" class="flex"
           v-model:value="ans"
           type="textarea"
+          :allow-input="(value) => !value || /^[\d ]+$/.test(value)"
           :placeholder="placeHolder"
-          :class="{readonly:ansReadOnly}"
         />
+        <div v-else class="flex" id="ans-div">
+          <ul>
+            <li v-for="name in yaku" :key="name">{{name}}</li>
+          </ul>
+          <div>{{result}}</div>
+          <div>{{user[0]}}</div>
+          <div>{{user[1]}}</div>
+
+          <div v-if="user[2]" class="correct">答案正确</div>
+          <div v-else class="wrong">答案错误</div>
+        </div>
         <n-button @click="onClick()" size="large">{{btnText}}</n-button>
       </div>
     </div>
@@ -46,6 +57,7 @@
   import { NInput, NButton } from 'naive-ui'
   import {test,CHIIHOU,HOUTEI_RAOYUI,FIELD_WEST,DOUBLE_RIICHI,CHANKAN,HAITEI_RAOYUE,RIICHI,SEAT_NORTH,SEAT_WEST,RON,RINNSHANN_KAIHOU,TENHOU,FIELD_SOUTH,SEAT_EAST,IPPATSU,TSUMO,FIELD_NORTH,FIELD_EAST,SEAT_SOUTH} from '@/store/calc'
 
+
   export default{
     name:"PracticeView",
     data(){
@@ -56,7 +68,6 @@
         ans: '',
         hintText:'输入答案',
         btnText:"确认",
-        ansReadOnly:false,
       }
     },
     props:{
@@ -67,6 +78,10 @@
     },
     created(){
       this.newProblem()
+    },
+    mounted() {
+      //  监听键盘事件
+      document.addEventListener('keydown', this.handleKeyDown.bind(null, this));
     },
     methods:{
       cvtPai(pai){
@@ -117,24 +132,32 @@
         testFlag(this,TENHOU, "天和\n");
         testFlag(this,CHIIHOU, "地和\n");
       },
+      handleKeyDown: (vm, e) => {
+        if(e.key == "Enter"){
+            vm.onClick()
+            e.preventDefault()
+        }
+      },
       onClick(){
-          /*
-          答案检测
-          答案显示
-          */
         if(this.btnText=="确认"){
-        console.log(1)
           this.hintText = "答案显示"
-          this.ansReadOnly = false
           this.btnText="下一题"
+          
+          // if(correct){
+          //   this.ans += '\n答案正确'
+          // }
+          // else{
+          //   this.ans += '\n答案错误'
+          // }
         }
         else{
-
+          
           this.hintText = "输入答案"
           this.ansReadOnly = true
           this.btnText="确认"
           this.ans=""
           this.problem = this.generator.generate()
+          this.info=""
           this.newProblem();
         }
       }
@@ -190,6 +213,82 @@
         else{
             return "子家自摸：请按顺序输入收取子家/亲家点数,中间用空格隔开"
         }
+      },
+      yaku(){
+        return this.problem.ans.yaku;
+      },
+      result(){
+        const p = this.problem;
+
+        if (p.ans.isYakuman) {
+           return(parseInt(p.ans.han) + "倍役满");
+        }
+        else {
+          switch (p.ans.manType) {
+            case 0:
+             return(
+                parseInt(p.ans.han) + "番 " +
+                parseInt(p.ans.fu) + "符");
+            case 1:
+              if (p.ans.han != 5) {
+               return(
+                  parseInt(p.ans.han) + "番 " +
+                  parseInt(p.ans.fu) + "符 满贯");
+              }
+              else {
+               return(
+                    parseInt(p.ans.han) + "番 满贯");
+              }
+            case 2:
+               return(parseInt(p.ans.han) +
+                                        "番 跳满");
+            case 3:
+               return(parseInt(p.ans.han) +
+                                        "番 倍满");
+            case 4:
+               return(parseInt(p.ans.han) +
+                                        "番 三倍满");
+            case 5:
+               return(parseInt(p.ans.han) +
+                                        "番 累计役满");
+          }
+        }
+        return "错误"
+      },
+      user(){
+        const s = this.ans;
+        let x1=0,x2=0
+
+        const l = s.split(/[;: /]/)
+        let lt=[]
+        for(const b of l){
+            if(b!='')lt.push(b)
+        }
+
+        x1 = +lt[0]
+        if(lt.length>1)x2=+lt[1]
+
+        let correct = true
+        const p = this.problem;
+        let rt=[]
+
+        if(p.ans.pointType == 1 || p.ans.pointType==3){
+          rt.push(`您输入的答案为: ${x1}\n`)
+          rt.push(`正确答案: ${p.ans.point1}\n`)
+          if(x1!=p.ans.point1)correct=false
+        }
+        else if(p.ans.pointType == 0){
+          rt.push(`您输入的答案为: ${x1} ALL\n`)
+          rt.push(`正确答案: ${p.ans.point1}ALL\n`)
+          if(x1!=p.ans.point1)correct=false
+        }
+        else{
+          rt.push(`您输入的答案为: ${x1}/${x2}\n`)
+          rt.push(`正确答案: ${p.ans.point1}/${p.ans.point2}\n`)
+          if(x1!=p.ans.point1 || x2!=p.ans.point2)correct=false
+        }
+        rt.push(correct)
+        return rt
       }
     },
   }
@@ -214,5 +313,19 @@
   }
   .spacer{
     width: 20px;
+  }
+
+  .correct{
+    color: #0f0;
+    font-size: 30px;
+  }
+  .wrong{
+    color: red;
+    font-size: 30px;
+  }
+
+  #ans-div{
+    padding: 5px;
+    border: 2px solid lightgray;
   }
 </style>

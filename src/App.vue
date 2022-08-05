@@ -22,7 +22,7 @@
         素材来自：<a target="_blank" href="http://wiki.lingshangkaihua.com/mediawiki/index.php/%E9%A6%96%E9%A1%B5">立直麻将百科</a>
         &nbsp;&nbsp;&nbsp;
         备案号：<a target="_blank" href="https://beian.miit.gov.cn/">沪ICP备2022015064号</a>
-        <!-- <a href="/legacy" id="bk">返回旧版？</a> -->
+        <a href="/legacy" id="bk">返回旧版？</a>
       </div>
     </footer>
     <n-modal

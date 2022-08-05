@@ -17,7 +17,7 @@
     <footer>            
       <div>
         <a target="_blank" href="https://beian.miit.gov.cn/">沪ICP备2022015064号</a>
-        <a href="/legacy" id="bk">返回旧版？</a>
+        <a href="/legacy" id="bk">返回旧版</a>
       </div>
     </footer>
     <n-modal

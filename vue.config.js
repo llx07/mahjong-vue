@@ -5,14 +5,11 @@ const webpack = require("webpack");
 // })
 
 module.exports = {
-  configureWebpack: {
-    plugins: [
-      new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery',
-        Popper: ['popper.js', 'default']
-      })
-    ]
+  chainWebpack: config=>{
+    config.plugin('html').
+    tap(args => {
+      args[0].title =  "在线日麻工具"
+      return args
+    })
   }
 }

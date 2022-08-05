@@ -2,6 +2,7 @@
   <div id="root">
     <header>
       <nav>
+        llx的日麻工具 v2.0
         <router-link to="/calculator">计算器</router-link>|
         <router-link to="/practice">点数练习</router-link>
       </nav>
@@ -14,6 +15,16 @@
       <router-view :rule="rule"/>
     </div>
 
+    <footer>            
+      <div>
+        © 2022 Linlexiao All rights reserved. &nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
+        素材来自：<a target="_blank" href="http://wiki.lingshangkaihua.com/mediawiki/index.php/%E9%A6%96%E9%A1%B5">立直麻将百科</a>
+        &nbsp;&nbsp;&nbsp;
+        备案号：<a target="_blank" href="https://beian.miit.gov.cn/">沪ICP备2022015064号</a>
+        <!-- <a href="/legacy" id="bk">返回旧版？</a> -->
+      </div>
+    </footer>
     <n-modal
       v-model:show="showSetting"
       class="custom-card"
@@ -114,11 +125,14 @@
         localStorage.setItem('rule',JSON.stringify(this.rule))
       }
     }
-    // TODO 保存到本地
   }
 </script>
 
 <style scoped>
+  #bk{
+    margin-left: 60px;
+  }
+
   #root{
     --nav-height:60px;
   }
@@ -141,6 +155,25 @@
     padding: 0 10px;
   }
 
+  footer {
+    position: fixed ;
+    bottom: 0;
+    left:0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    height: 40px;/*脚部的高度*/
+    background: aliceblue;
+    clear:both;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    align-items:center;
+    display:flex;
+    flex-direction:column;
+}
+
+
   nav a {
     font-weight: bold;
     color: #2c3e50;
@@ -155,6 +188,7 @@
 
   #content{
     padding-top: var(--nav-height);
+    padding-bottom: 40px;
   }
 
   #setting{

@@ -37,7 +37,7 @@ export const SHUANG_PENG = 3;
 export const DAN_QI = 4;
 
 
-function test(flag,value){
+export function test(flag,value){
     return (flag&value) == value
 }
 function pType2Int(pType){
@@ -829,6 +829,7 @@ class Junchantaiyao{
             if(!b.consistYao())return 0
         }
         if(handSet.pair.type=='z')haveZi=true
+
         if(!handSet.pair.consistYao())return 0
         if(haveZi || !haveSeq)return 0;
         return value

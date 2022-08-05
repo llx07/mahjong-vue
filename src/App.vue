@@ -2,12 +2,11 @@
   <div id="root">
     <header>
       <nav>
-        llx的日麻工具 v2.0
         <router-link to="/calculator">计算器</router-link>|
         <router-link to="/practice">点数练习</router-link>
       </nav>
       <div class="flex"></div>
-      <n-icon size="60" @click="showSetting=!showSetting" id="setting">
+      <n-icon size="2rem" @click="showSetting=!showSetting" id="setting">
         <settings/>
       </n-icon>
     </header>
@@ -17,11 +16,7 @@
 
     <footer>            
       <div>
-        © 2022 Linlexiao All rights reserved. &nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;
-        素材来自：<a target="_blank" href="http://wiki.lingshangkaihua.com/mediawiki/index.php/%E9%A6%96%E9%A1%B5">立直麻将百科</a>
-        &nbsp;&nbsp;&nbsp;
-        备案号：<a target="_blank" href="https://beian.miit.gov.cn/">沪ICP备2022015064号</a>
+        <a target="_blank" href="https://beian.miit.gov.cn/">沪ICP备2022015064号</a>
         <a href="/legacy" id="bk">返回旧版？</a>
       </div>
     </footer>
@@ -29,7 +24,7 @@
       v-model:show="showSetting"
       class="custom-card"
       preset="card"
-      :style="{width:'600px'}"
+      :style="{width:'37.5rem'}"
       title="自定义设置"
       :bordered="false"
       @after-leave="updateData"
@@ -130,17 +125,21 @@
 
 <style scoped>
   #bk{
-    margin-left: 60px;
+    margin-left: 3.75rem;
   }
 
   #root{
-    --nav-height:60px;
+    --nav-height:2rem  ;
   }
   nav {
     height:var(--nav-height);
     line-height: var(--nav-height);
     text-align: center;
-    font-size: 25px;
+    font-size: 1.5rem;
+  }
+
+  header,footer{
+    z-index: 5;
   }
 
   header{
@@ -148,11 +147,11 @@
     text-align: center;
     background-color:aliceblue;
     position: fixed;
-    width: calc(100% - 20px);
+    width: calc(100% - 2.4rem);
     top: 0;
     left:0;
     display: flex;
-    padding: 0 10px;
+    padding: 0 1.2rem;
   }
 
   footer {
@@ -162,7 +161,7 @@
     width: 100%;
     padding: 0;
     margin: 0;
-    height: 40px;/*脚部的高度*/
+    height: 2rem;
     background: aliceblue;
     clear:both;
     text-align: center;
@@ -188,7 +187,7 @@
 
   #content{
     padding-top: var(--nav-height);
-    padding-bottom: 40px;
+    padding-bottom: 2rem;
   }
 
   #setting{

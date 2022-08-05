@@ -312,20 +312,20 @@
     align-items: center;
   }
   .spacer{
-    width: 20px;
+    width: 1rem;
   }
 
   .correct{
     color: #0f0;
-    font-size: 30px;
+    font-size: 2rem;
   }
   .wrong{
     color: red;
-    font-size: 30px;
+    font-size: 2rem;
   }
 
   #ans-div{
-    padding: 5px;
-    border: 2px solid lightgray;
+    padding: 0.3rem;
+    border: 0.125rem solid lightgray;
   }
 </style>

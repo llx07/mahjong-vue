@@ -1,7 +1,7 @@
 <template>  
   <div class="flex-row">
     <div>
-      <div v-for="row in paiName" :key="row" class="flex-row">
+      <div v-for="row in paiName" :key="row" class="flex-row nowrap">
         <pai-select v-for="pai in row" :key="pai" 
           :name="pai" @click="add(pai)" :class="{disabled:isDisable[pai]}"></pai-select>
       </div>
@@ -530,27 +530,30 @@ export default {
     flex:auto
   }
   .flex-row:not(.nospace)>div,.flex-col:not(.nospace)>*{
-    margin: 2px;
+    margin: 0.1rem;
   }
   .class1{
-    width: 250px;
+    width: 16rem;
   }
   .line{
-    margin: 5px 0px;
+    margin: 0.5rem 0;
+  }
+  .nowrap{
+    flex-wrap: nowrap;
   }
   .number{
-    font-size:50px;
+    font-size:3.125rem;
   }
   #result{
-    padding: 5px;
+    padding: 0.3125rem;
     flex:auto;
-    border: 3px solid black;
+    border: 0.2rem solid black;
   }
   .box{
     align-items: flex-start;
-    border: 2px dashed grey;
+    border: 0.125rem dashed grey;
     padding: 0.2rem;
-    min-height:100px;
+    min-height:6.25rem;
     display: flex;
     flex-wrap: wrap;
   }

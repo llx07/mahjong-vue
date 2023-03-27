@@ -5,6 +5,7 @@ const webpack = require("webpack");
 // })
 
 module.exports = {
+  publicPath:"/maj/",
   chainWebpack: config=>{
     config.plugin('html').
     tap(args => {

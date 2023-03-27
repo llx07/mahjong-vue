@@ -30,6 +30,8 @@ class Problem{
         this.flag = 0
         this.ans =  new Result()
     }
+
+    // THIS FUNCTION WAS NOT USED(2023/03/27) NOT KNOWING WHY
     calculateResult(){
         let cnt = 0
         for(const p of this.hand){
@@ -299,6 +301,7 @@ export class ProblemGenerator{
                 cnt += p.redCnt
             }
         }
+        cnt += agariPai.redCnt;
 
         // console.log("hand",JSON.parse(JSON.stringify(hand)))
         // console.log("field,seat:",field,seat)

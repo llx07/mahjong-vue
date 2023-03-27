@@ -1508,8 +1508,8 @@ export class Calculator{
             }
         }
         if(dora>0)yakuName.push(`宝牌: ${dora}番`)
-        if(ura>0)yakuName.push(`里宝牌: ${dora}番`)
-        if(akadora>0)yakuName.push(`赤宝牌: ${dora}番`)
+        if(ura>0)yakuName.push(`里宝牌: ${ura}番`)
+        if(akadora>0)yakuName.push(`赤宝牌: ${akadora}番`)
         cnt+=dora+ura+akadora
 
         function calcFlagYaku(this_,obj,isYakuman=false){

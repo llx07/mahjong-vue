@@ -15,9 +15,8 @@
     </div>
 
     <footer>            
-      <div>
-        <a target="_blank" href="https://beian.miit.gov.cn/">沪ICP备2022015064号</a>
-        <a href="/legacy" id="bk">返回旧版</a>
+      <div>©2022-2023 linlexiao.com 版权所有 | 
+        <a target="_blank" href="https://beian.miit.gov.cn/"> 沪ICP备2022025418号-2</a>
       </div>
     </footer>
     <n-modal

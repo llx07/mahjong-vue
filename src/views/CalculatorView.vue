@@ -1,4 +1,5 @@
 <template>  
+
   <div class="flex-row">
     <div>
       <div v-for="row in paiName" :key="row" class="flex-row nowrap">

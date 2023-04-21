@@ -1,14 +1,20 @@
 <template>
   <div id="root">
     <header>
-      <nav>
-        <router-link to="/calculator">计算器</router-link>|
-        <router-link to="/practice">点数练习</router-link>
-      </nav>
-      <div class="flex"></div>
-      <n-icon size="2rem" @click="showSetting=!showSetting" id="setting">
-        <settings/>
-      </n-icon>
+      <n-space>
+        <router-link class="nav" to="/calculator">计算器</router-link>
+        <div class="nav">|</div>
+        <router-link class="nav" to="/practice">点数练习</router-link>
+      </n-space>
+
+      <n-space justify="end" id="nav-buttons">
+        <n-icon size="2rem" @click="showInfo=!showInfo" color="#333">
+          <InfoRound/>
+        </n-icon>
+        <n-icon size="2rem" @click="showSetting=!showSetting" color="#333">
+          <SettingsRound/>
+        </n-icon>
+      </n-space>
     </header>
     <div id="content">
       <router-view :rule="rule"/>
@@ -19,6 +25,8 @@
         <a target="_blank" href="https://beian.miit.gov.cn/"> 沪ICP备2022025418号-2</a>
       </div>
     </footer>
+
+    <!-- 设置修改框  -->
     <n-modal
       v-model:show="showSetting"
       class="custom-card"
@@ -28,7 +36,6 @@
       :bordered="false"
       @after-leave="updateData"
     >
-
       <n-grid :cols="2" :y-gap="3">
         <n-grid-item>食断：</n-grid-item>
         <n-grid-item>
@@ -40,6 +47,7 @@
             />
           </n-radio-group>
         </n-grid-item>
+        
         <n-grid-item>多倍役满：</n-grid-item>
         <n-grid-item>
           <n-radio-group v-model:value="rule.duoBeiYiMan">
@@ -84,13 +92,45 @@
         </n-grid-item>
       </n-grid>
     </n-modal>
+
+    
+    <!-- 信息框  -->
+    <n-modal
+      v-model:show="showInfo"
+      class="custom-card"
+      preset="card"
+      :style="{width:'37.5rem'}"
+      title="关于"
+      :bordered="false"
+    >
+
+      <div>
+        <p>
+            本项目采用 Vue 构建，核心逻辑使用 JavaScript 实现，并在 Github 上开源。项目地址 <a href="https://github.com/linlexiao0/mahjong-vue">https://github.com/linlexiao0/mahjong-vue</a>。欢迎提出 Pull Requests 或 Fork 你自己的版本！
+        </p>
+
+        <p>
+          牌画素材来自 <a href="http://wiki.lingshangkaihua.com/">最完整的日本麻將中文維基百科</a>。
+        </p>
+
+        <p>
+          支持对某些规则进行自定义（旁边的按钮）。现在可以自定义的规则有：食断，是否计多倍役满、复合役满，连凤雀头符数，是否计累计役满。
+        </p>
+
+        <p>
+          如果有什么意见和想法，可以在 Github 上提出 Issue，或也可以联系我的邮箱 <a href="mailto://linlexiao2007@outlook.com">linlexiao2007@outlook.com</a>。
+        </p>
+      </div>
+
+    </n-modal>
+
   </div>
 </template>
 
 <script>
   import { Rule } from './store/calc'
-  import { NModal,NRadioGroup,NRadioButton, NGrid, NGridItem, NIcon} from 'naive-ui'
-  import { Settings } from 'vicons/ionicons-v5'
+  import { NModal,NRadioGroup,NRadioButton, NGrid, NGridItem, NIcon, NSpace} from 'naive-ui'
+  import { SettingsRound,InfoRound } from '@vicons/material'
 
   export default{
     name:"App",
@@ -98,6 +138,9 @@
       return {
         rule:new Rule(),
         showSetting:false,
+        showInfo:false,
+
+
         settings:[
           [{value:1,label:"有"},{value:0,label:"无"}],
           [{value:0,label:"2符"},{value:1,label:"4符"}],
@@ -106,8 +149,8 @@
       }
     },
     components: {
-      NModal,NRadioGroup,NRadioButton,NGrid, NGridItem,NIcon,
-      Settings
+      NModal,NRadioGroup,NRadioButton,NGrid, NGridItem,NIcon,NSpace,
+      SettingsRound,InfoRound
     },
     created(){
       if(localStorage.getItem('rule')!=null){
@@ -123,19 +166,16 @@
 </script>
 
 <style scoped>
+  
   #bk{
     margin-left: 3.75rem;
   }
 
   #root{
-    --nav-height:2rem  ;
+    --nav-height: 2.5rem  ;
+    --nav-padding: 0.25rem  ;
   }
-  nav {
-    height:var(--nav-height);
-    line-height: var(--nav-height);
-    text-align: center;
-    font-size: 1.5rem;
-  }
+  
 
   header,footer{
     z-index: 5;
@@ -144,13 +184,12 @@
   header{
     height: var(--nav-height);
     text-align: center;
-    background-color:aliceblue;
     position: fixed;
     width: calc(100% - 2.4rem);
     top: 0;
     left:0;
     display: flex;
-    padding: 0 1.2rem;
+    padding: var(--nav-padding) 1.2rem;
   }
 
   footer {
@@ -161,8 +200,6 @@
     padding: 0;
     margin: 0;
     height: 2rem;
-    background: aliceblue;
-    clear:both;
     text-align: center;
     align-content: center;
     justify-content: center;
@@ -171,13 +208,25 @@
     flex-direction:column;
 }
 
+  .nav {
+    height:var(--nav-height);
+    line-height: var(--nav-height);
+    text-align: center;
+    font-size: 1.5rem;
+  }
 
-  nav a {
+  a.nav  {
     font-weight: bold;
     color: #2c3e50;
   }
-
-  nav a.router-link-exact-active {
+  #nav-buttons{
+    flex-grow: 1;
+  }
+  
+  #nav-buttons svg{
+    cursor: pointer;
+  }
+  a.nav.router-link-exact-active {
     color: #42b983;
   }
   .flex{
@@ -185,18 +234,17 @@
   }
 
   #content{
-    padding-top: var(--nav-height);
+    padding-top: calc(var(--nav-height)+ 2 * var(--nav-padding));
     padding-bottom: 2rem;
+    padding-left: 2px;
+    padding-right: 2px;
   }
 
-  #setting{
-    cursor: pointer;
-  }
 
   #modal::before{
     content: "";
     background-color: rgba(0,0,0,0.5);
-    z-index: 5;
+    z-index: 10;
     position: absolute;
     top:0;
     left:0;

@@ -10,24 +10,24 @@
     </div>
     <div class="flex-row">
       <div class="flex-col">
-        <div>宝牌指示牌区</div>
+        <label>宝牌指示牌区</label>
         <div class="flex-row center">
-          表
+          <label>表</label>
           <pai-select v-for="(name,index) in dora" :key="index" :name="name"/>
         </div>
         <div class="flex-row center">
-          里
+          <label>里</label>
           <pai-select v-for="(name,index) in ura" :key="index" :name="name"/>
         </div>
-        <div>和了情况</div>
+        <label>和了情况</label>
         <n-input size="large"
           v-model:value="info" readonly :rows="6"
           type="textarea"
         />
       </div>
       <div class="flex-col flex">
-        {{hintText}}
-        <n-input  v-if="hintText=='输入答案'" size="large" class="flex"
+        <label>{{hintText}}</label>
+        <n-input ref="input" v-if="hintText=='输入答案'" size="large" class="flex"
           v-model:value="ans"
           type="textarea"
           :allow-input="(value) => !value || /^[\d ]+$/.test(value)"
@@ -82,6 +82,21 @@
     mounted() {
       //  监听键盘事件
       document.addEventListener('keydown', this.handleKeyDown.bind(null, this));
+      this.$refs.input.focus()
+
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
+      // this.$refs.input.focus()
     },
     methods:{
       cvtPai(pai){
@@ -139,19 +154,12 @@
         }
       },
       onClick(){
+          console.log(this)
         if(this.btnText=="确认"){
           this.hintText = "答案显示"
           this.btnText="下一题"
-          
-          // if(correct){
-          //   this.ans += '\n答案正确'
-          // }
-          // else{
-          //   this.ans += '\n答案错误'
-          // }
         }
         else{
-          
           this.hintText = "输入答案"
           this.ansReadOnly = true
           this.btnText="确认"
@@ -159,6 +167,7 @@
           this.problem = this.generator.generate()
           this.info=""
           this.newProblem();
+          this.$nextTick(()=>{this.$refs.input.focus()})
         }
       }
     },
@@ -327,5 +336,9 @@
   #ans-div{
     padding: 0.3rem;
     border: 0.125rem solid lightgray;
+  }
+
+  label{
+    font-size: 1.25rem;
   }
 </style>

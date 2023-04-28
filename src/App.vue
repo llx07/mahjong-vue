@@ -110,7 +110,7 @@
         </p>
 
         <p>
-          牌画素材来自 <a href="http://wiki.lingshangkaihua.com/">最完整的日本麻將中文維基百科</a>。
+          牌画素材来自 <a href="https://github.com/lietxia/mahjong_graphic">https://github.com/lietxia/mahjong_graphic</a>，以「M+字型授權條款」授权。
         </p>
 
         <p>

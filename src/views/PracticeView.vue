@@ -236,30 +236,30 @@
           switch (p.ans.manType) {
             case 0:
              return(
-                parseInt(p.ans.han) + "番 " +
+                parseInt(p.ans.han) + "翻 " +
                 parseInt(p.ans.fu) + "符");
             case 1:
               if (p.ans.han != 5) {
                return(
-                  parseInt(p.ans.han) + "番 " +
+                  parseInt(p.ans.han) + "翻 " +
                   parseInt(p.ans.fu) + "符 满贯");
               }
               else {
                return(
-                    parseInt(p.ans.han) + "番 满贯");
+                    parseInt(p.ans.han) + "翻 满贯");
               }
             case 2:
                return(parseInt(p.ans.han) +
-                                        "番 跳满");
+                                        "翻 跳满");
             case 3:
                return(parseInt(p.ans.han) +
-                                        "番 倍满");
+                                        "翻 倍满");
             case 4:
                return(parseInt(p.ans.han) +
-                                        "番 三倍满");
+                                        "翻 三倍满");
             case 5:
                return(parseInt(p.ans.han) +
-                                        "番 累计役满");
+                                        "翻 累计役满");
           }
         }
         return "错误"

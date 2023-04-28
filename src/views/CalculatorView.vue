@@ -45,7 +45,7 @@
           <div v-else-if="result.pointType==0">{{result.point1}} ALL</div>
           <div v-else>{{result.point1}}</div>
         </div>
-        <div v-if="!result.isYakuman">{{result.han}}番
+        <div v-if="!result.isYakuman">{{result.han}}翻
           <span v-if="needFu">{{result.fu}}符</span>
           {{manName}}
         </div>

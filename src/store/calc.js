@@ -1229,7 +1229,7 @@ export class Calculator{
             cnt+=p
             if(p!=0){
                 res.yaku.push(
-                    `${x.getName()}: ${p}番`
+                    `${x.getName()}: ${p}翻`
                 )
             }
         }
@@ -1493,7 +1493,7 @@ export class Calculator{
         }
         let cnt = 2
         let yakuman = 0
-        let yakuName = ["七对子: 2番"]
+        let yakuName = ["七对子: 2翻"]
         let yakumanName = []
 
         let dora=0
@@ -1507,9 +1507,9 @@ export class Calculator{
                 if(p.equalTo(d.next()))ura++
             }
         }
-        if(dora>0)yakuName.push(`宝牌: ${dora}番`)
-        if(ura>0)yakuName.push(`里宝牌: ${ura}番`)
-        if(akadora>0)yakuName.push(`赤宝牌: ${akadora}番`)
+        if(dora>0)yakuName.push(`宝牌: ${dora}翻`)
+        if(ura>0)yakuName.push(`里宝牌: ${ura}翻`)
+        if(akadora>0)yakuName.push(`赤宝牌: ${akadora}翻`)
         cnt+=dora+ura+akadora
 
         function calcFlagYaku(this_,obj,isYakuman=false){
@@ -1517,7 +1517,7 @@ export class Calculator{
             if(x>0){
                 if(!isYakuman){
                     cnt+=x
-                    yakuName.push(`${obj.getName()}: ${x}番`)
+                    yakuName.push(`${obj.getName()}: ${x}翻`)
                 }
                 else{
                     yakuman += x
@@ -1544,7 +1544,7 @@ export class Calculator{
             let value = 1
             let name = "断幺九"
             cnt+=value
-            yakuName.push(`${name}: ${value}番`)
+            yakuName.push(`${name}: ${value}翻`)
         }
         function CalcHoniisou(this_){
             let typeCnt = [0,0,0,0]
@@ -1556,7 +1556,7 @@ export class Calculator{
             let value = 3
             let name = "混一色"
             cnt+=value
-            yakuName.push(`${name}: ${value}番`)
+            yakuName.push(`${name}: ${value}翻`)
         }
         function CalcChiniisou(this_){
             let typeCnt = [0,0,0,0]
@@ -1568,7 +1568,7 @@ export class Calculator{
             let value = 6
             let name = "清一色"
             cnt+=value
-            yakuName.push(`${name}: ${value}番`)
+            yakuName.push(`${name}: ${value}翻`)
         }
         function CalcHonroutou(this_){
             for(const p of this_.nowP){
@@ -1578,7 +1578,7 @@ export class Calculator{
             let value = 2
             let name = "混老头"
             cnt+=value
-            yakuName.push(`${name}: ${value}番`)
+            yakuName.push(`${name}: ${value}翻`)
         }
         function CalcTsuuiisou(this_){
             for(const p of this_.nowP){

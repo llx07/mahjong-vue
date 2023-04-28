@@ -80,7 +80,7 @@
           </n-radio-group>
         </n-grid-item>
 
-        <n-grid-item>13番及以上：</n-grid-item> 
+        <n-grid-item>13翻及以上：</n-grid-item> 
         <n-grid-item>
           <n-radio-group v-model:value="rule.allowLeiMan">
           <n-radio-button

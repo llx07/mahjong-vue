@@ -1128,6 +1128,7 @@ export class Result{
     constructor(){
         this.han=0
         this.fu=0
+        this.fuMessages = []
         this.point1=0
         this.point2=0
         this.pointType=OYATSUMO
@@ -1239,34 +1240,74 @@ export class Calculator{
     _calculateFu(hand,res){
         if(new Pinfu().test(hand)==1 && test(hand.flag,TSUMO)){
             res.fu=20
+            res.fuMessages.push("平和自摸：20符")
             return
         }
 
         let fu = 20
-        if(test(hand.flag,TSUMO))fu+=2
-        if(test(hand.flag,RON|MENZEN))fu+=10
+        res.fuMessages.push("底符：20符")
+        if(test(hand.flag,TSUMO)){
+            fu+=2
+            res.fuMessages.push("自摸 +2符")
+        }
+        if(test(hand.flag,RON|MENZEN)){
+            fu+=10
+            res.fuMessages.push("门前荣和 +10符")
+        }
 
-        if(hand.type == DAN_QI || hand.type == KAN_ZHANG
-            ||hand.type==BIAN_ZHANG)fu+=2
+        if(hand.type == DAN_QI){
+            fu+=2
+            res.fuMessages.push("单骑听牌 +2符")
+        }
+        if(hand.type == KAN_ZHANG){
+            fu+=2
+            res.fuMessages.push("坎张听牌 +2符")
+        }
+        if(hand.type==BIAN_ZHANG){
+            fu+=2
+            res.fuMessages.push("边张听牌 +2符")
+        }
         
         for(const b of hand.blocks){
             if(b.bType==SEQ)continue
-            let baseFu = 2
-            if(!b.isOpen)baseFu*=2
-            if(b.consistYao())baseFu*=2
-            if(b.bType==QUAD)baseFu*=4
-            fu+=baseFu
+            let blockFu = 2
+            let blockMessage = ""
+
+            if(b.consistYao())blockFu*=2,blockMessage+="幺九"
+            else blockMessage+="中张"
+
+            if(!b.isOpen)blockFu*=2,blockMessage+="暗"
+            else blockMessage+="明"
+
+            if(b.bType==QUAD)blockFu*=4,blockMessage+="杠"
+            else blockMessage+="刻"
+
+            fu+=blockFu
+            res.fuMessages.push(blockMessage+` +${blockFu}符`)
         }
 
-        if(this.rule.lianFeng4)
-            fu += hand.pair.getPai()[0].isYakuhai(hand.flag)*2
-        else
-            fu += Math.min(1,hand.pair.getPai()[0].isYakuhai(hand.flag)) *2
+        let quetouFu=0;
+        if(this.rule.lianFeng4){
+            quetouFu = hand.pair.getPai()[0].isYakuhai(hand.flag)*2
+        }
+        else{
+            // 如果雀头是连风，那么min到1 再乘2，即连风也计2符
+            quetouFu = Math.min(1,hand.pair.getPai()[0].isYakuhai(hand.flag)) *2
+        }
+        fu += quetouFu
+        if(quetouFu>0)res.fuMessages.push(`役牌雀头 +${quetouFu}符`)
 
-        if(fu==20)fu=30
+        if(fu==20){
+            res.fu=30
+            res.fuMessages.push(`吃牌后，合计20符时：30符`)
+            return
+        }
 
+        
+        res.fuMessages.push(`共${fu}符`)
         if(fu%10 != 0){
             fu = Math.floor((fu+10)/10)*10
+            res.fuMessages[res.fuMessages.length-1] += `，切上${fu}符`
         }
         res.fu=fu
     }
@@ -1604,6 +1645,7 @@ export class Calculator{
             res.yaku = yakuName
         }
         this._calculatePoint(this.nowHandSet,res)
+        res.fuMessages.push("七对子：25符")
         this.result = res
     }
     calculate(state,rule=new Rule()){
@@ -1611,7 +1653,6 @@ export class Calculator{
         this.nowHandSet = new HandSet([],
             undefined,undefined,undefined,undefined,
             undefined,undefined,undefined,undefined)
-        // console.log('123',this.nowHandSet)
         this.result = new Result()
 
         this.nowP = state.pais
@@ -1624,11 +1665,9 @@ export class Calculator{
         this.nowHandSet.ura=state.ura
         this.nowHandSet.agariPai=state.agariPai
         this.nowHandSet.redCnt=state.redCnt
-        // console.log('123',this.nowHandSet)
         for(const b of state.furu){
             this.nowHandSet.blocks.push(b)
         }
-        // this.__()
         this._calculateKokushi()
         this._calculateChiitui()
         this._calculateNormal(0)

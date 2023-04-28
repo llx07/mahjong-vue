@@ -55,6 +55,16 @@
             {{name}}
           </li>
         </ul>
+
+        <div v-if="needFu">
+          符计算内容：
+          
+        <ul>
+          <li v-for="(name,index) in result.fuMessages" :key="index">
+            {{name}}
+          </li>
+        </ul>
+        </div>
       </div>
       <div v-else>
         <div class="number">
@@ -503,11 +513,11 @@ export default {
 
       let hasExceptDora=false;
       for(const name of this.result.yaku){
-        console.log(name)
         if(name.startsWith("宝牌"))continue;
         if(name.startsWith("里宝牌"))continue;
         if(name.startsWith("赤宝牌"))continue;
         if(name.startsWith("红宝牌"))continue;
+        console.log(name)
         hasExceptDora = true;
       }
       return hasExceptDora

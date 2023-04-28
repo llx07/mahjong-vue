@@ -37,6 +37,14 @@
           <ul>
             <li v-for="name in yaku" :key="name">{{name}}</li>
           </ul>
+          <div v-if="result.includes('符') ">
+
+            符计算内容：
+            <ul>
+              <li v-for="name in this.problem.ans.fuMessages" :key="name">{{name}}</li>
+            </ul>
+          </div>
+
           <div>{{result}}</div>
           <div>{{user[0]}}</div>
           <div>{{user[1]}}</div>
@@ -83,20 +91,6 @@
       //  监听键盘事件
       document.addEventListener('keydown', this.handleKeyDown.bind(null, this));
       this.$refs.input.focus()
-
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
-      // this.$refs.input.focus()
     },
     methods:{
       cvtPai(pai){
@@ -315,7 +309,8 @@
     flex-wrap: wrap;
   }
   .flex{
-    flex:auto
+    flex:auto;
+    margin: 2px;
   }
   .center{
     align-items: center;
@@ -335,10 +330,9 @@
 
   #ans-div{
     padding: 0.3rem;
-    border: 0.125rem solid lightgray;
+    border: 0.1rem solid lightgray;
+    border-radius: 0.2rem;
+    overflow: auto;
   }
 
-  label{
-    font-size: 1.25rem;
-  }
 </style>

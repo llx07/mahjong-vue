@@ -105,7 +105,7 @@ export class Pai{
         return cnt
     }
     next(){
-        let b = new Pai(this.type,this.num,this.isRed)
+        const b = new Pai(this.type,this.num,this.isRed)
         b.num++
         if(b.type=='z'){
             if(b.num==5)b.num=1 //原来是4->1
@@ -180,7 +180,7 @@ export class Block{
             pais[0].type,pais[0].num,isOpen)
     }
     getPai(){
-        let rt=[]
+        const rt=[]
         switch (this.bType) {
             case SEQ:
                 for(let i = this.num;i<this.num+3;i++){
@@ -215,7 +215,7 @@ class Pair{
         this.num=num
     }
     getPai(){
-        let rt=[]
+        const rt=[]
         rt.push(new Pai(this.type,this.num))
         rt.push(new Pai(this.type,this.num))
         return rt
@@ -519,7 +519,7 @@ class Riichi{
 class Iipeikou{
     test(handSet){
         if(!test(handSet.flag,MENZEN))return 0;
-        let localBlocks = handSet.blocks.slice(0)
+        const localBlocks = handSet.blocks.slice(0)
         for(let i=0;i<4;i++){
             for(let j=i+1;j<4;j++){
                 const b1 = localBlocks[i]
@@ -570,7 +570,7 @@ class Ippatsu{
 class Dora{
     test(handSet){
         let cnt = 0 
-        let dora = handSet.dora
+        const dora = handSet.dora
         let x = []
         for(const b of handSet.blocks){
             for(const p of b.getPai()){
@@ -597,7 +597,7 @@ class Dora{
 class Ura{
     test(handSet){
         let cnt = 0 
-        let ura = handSet.ura
+        const ura = handSet.ura
         for(const b of handSet.blocks){
             for(const p of b.getPai()){
                 for(const p2 of ura){
@@ -652,7 +652,7 @@ class Sanankou{
 }
 class SanshokuDoukou{
     test(handSet){
-        let cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+        const cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0]
         for(const b of handSet.blocks){
             if(b.bType!=SEQ){
                 cnt[b.num] |= (1<<pType2Int(b.pType))
@@ -728,7 +728,7 @@ class SanshokuDoujun{
     test(handSet){
         let value = 2
         if(!test(handSet.flag,MENZEN))value--;
-        let cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+        const cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0]
         for(const b of handSet.blocks){
             if(b.bType==SEQ){
                 cnt[b.num] |= (1<<pType2Int(b.pType))
@@ -747,7 +747,7 @@ class Ikkitsuukan{
         let value = 2
         if(!test(handSet.flag,MENZEN))value--
 
-        let cnt = [0,0,0,0,0]
+        const cnt = [0,0,0,0,0]
         for(const b of handSet.blocks){
             if(b.bType != SEQ)continue
             if(b.num==1){
@@ -798,13 +798,13 @@ class Honiisou{
     test(handSet){
         let value = 3
         if(!test(handSet.flag,MENZEN))value--
-        let contain = [0,0,0,0]
+        const contain = [0,0,0,0]
         for(const b of handSet.blocks){
             contain[pType2Int(b.pType)]=1
         }
         contain[pType2Int(handSet.pair.type)]=1
 
-        let x = contain[0] + contain[1] + contain[2]
+        const x = contain[0] + contain[1] + contain[2]
         if(x==1 && contain[pType2Int('z')])return value
         return 0
     }
@@ -842,7 +842,7 @@ class Ryanpeikou{
     test(handSet){
         if(!test(handSet.flag,MENZEN))return 0;
 
-        let localBlocks = handSet.blocks.slice(0)
+        const localBlocks = handSet.blocks.slice(0)
         
         for(let i=0;i<4;i++){
             for(let j=i+1;j<4;j++){
@@ -871,13 +871,13 @@ class Chiniisou{
     test(handSet){
         let value = 6
         if(!test(handSet.flag,MENZEN))value--
-        let contain = [0,0,0,0]
+        const contain = [0,0,0,0]
         for(const b of handSet.blocks){
             contain[pType2Int(b.pType)]=1
         }
         contain[pType2Int(handSet.pair.type)]=1
 
-        let x = contain[0] + contain[1] + contain[2]
+        const x = contain[0] + contain[1] + contain[2]
         if(x==1 && !contain[pType2Int('z')])return value
         return 0
     }
@@ -1013,8 +1013,8 @@ class ChuurenPoutou{
         if(!test(handSet.flag,MENZEN))return 0
         if(!new Chiniisou().test(handSet))return 0;
         
-        let cnt = [0,0,0,0,0,0,0,0,0,0,0,0]
-        let needNum = [0,3,1,1,1,1,1,1,1,3]
+        const cnt = [0,0,0,0,0,0,0,0,0,0,0,0]
+        const needNum = [0,3,1,1,1,1,1,1,1,3]
 
         for(const b of handSet.blocks){
             if(b.bType==QUAD)return 0;
@@ -1044,8 +1044,8 @@ class JunseiChuurenPoutou{
         if(!test(handSet.flag,MENZEN))return 0
         if(!new Chiniisou().test(handSet))return 0;
         
-        let cnt = [0,0,0,0,0,0,0,0,0,0,0,0]
-        let needNum = [0,3,1,1,1,1,1,1,1,3]
+        const cnt = [0,0,0,0,0,0,0,0,0,0,0,0]
+        const needNum = [0,3,1,1,1,1,1,1,1,3]
 
         for(const b of handSet.blocks){
             if(b.bType==QUAD)return 0;
@@ -1211,7 +1211,7 @@ export class Calculator{
         let cnt = 0;
         for(const x of this.yakumanYakus){
             // Some functions only have one param, JS just ignore the second param(rule)
-            let p = x.test(hand,this.rule) 
+            const p = x.test(hand,this.rule) 
             if(this.rule.fuHeYiMan)cnt += p
             else cnt=Math.max(cnt,p);
             if(p != 0){
@@ -1226,7 +1226,7 @@ export class Calculator{
 
         for(const x of this.yakus){
             // Some functions only have one param, JS just ignore the second param(rule)
-            let p = x.test(hand, this.rule)
+            const p = x.test(hand, this.rule)
             cnt+=p
             if(p!=0){
                 res.yaku.push(
@@ -1371,7 +1371,7 @@ export class Calculator{
     }
     _calculateNormal(dep){
         if(this.nowP.length==0){
-            let newResult = new Result()
+            const newResult = new Result()
             this._calculateFu(this.nowHandSet, newResult);
             this._calculateYaku(this.nowHandSet, newResult);
             this._calculatePoint(this.nowHandSet, newResult);
@@ -1384,11 +1384,11 @@ export class Calculator{
             return
         }
         if(dep==0){
-            let l = this.nowP.length
+            const l = this.nowP.length
             for(let i=0;i<l-1;i++){
                 if(this.nowP[i].equalTo(this.nowP[i+1])){
-                    let a = this.nowP[i]
-                    let b = this.nowP[i+1]
+                    const a = this.nowP[i]
+                    const b = this.nowP[i+1]
 
                     if(a.isAgari || b.isAgari){
                         this.nowHandSet.type = DAN_QI
@@ -1402,9 +1402,9 @@ export class Calculator{
             }
         }
         else{
-            let a = this.nowP[0]
-            let b = this.nowP[1]
-            let c = this.nowP[2]
+            const a = this.nowP[0]
+            const b = this.nowP[1]
+            const c = this.nowP[2]
             if(a.equalTo(b) && b.equalTo(c)){
                 let open = false
                 if(a.isAgari || b.isAgari || c.isAgari){
@@ -1419,7 +1419,7 @@ export class Calculator{
                 this.nowP.splice(0,0,a,b,c)
                 this.nowHandSet.blocks.pop()
             }
-            let l = this.nowP.length
+            const l = this.nowP.length
             if(this.nowP[0].num > 7 || this.nowP[0].type=='z')return
 
             let a2 = a.next()
@@ -1467,8 +1467,8 @@ export class Calculator{
         }
     }
     _calculateKokushi(){
-        let cnt = []
-        let isAgari = []
+        const cnt = []
+        const isAgari = []
         for(let i=0;i<20;i++){
             cnt.push(0)
             isAgari.push(false)
@@ -1505,7 +1505,7 @@ export class Calculator{
             if(cnt[i]==0)return
             if(cnt[i]==2 && isAgari[i])yakumanCount++
         }
-        let res = new Result()
+        const res = new Result()
         res.han = yakumanCount
         res.isYakuman = true
         res.yaku.push(
@@ -1534,12 +1534,12 @@ export class Calculator{
         }
         let cnt = 2
         let yakuman = 0
-        let yakuName = ["七对子: 2翻"]
-        let yakumanName = []
+        const yakuName = ["七对子: 2翻"]
+        const yakumanName = []
 
         let dora=0
         let ura=0
-        let akadora = this.nowHandSet.redCnt
+        const akadora = this.nowHandSet.redCnt
         for(const p of this.nowP){
             for(const d of this.nowHandSet.dora){
                 if(p.equalTo(d.next()))dora++
@@ -1554,7 +1554,7 @@ export class Calculator{
         cnt+=dora+ura+akadora
 
         function calcFlagYaku(this_,obj,isYakuman=false){
-            let x = obj.test(this_.nowHandSet)
+            const x = obj.test(this_.nowHandSet)
             if(x>0){
                 if(!isYakuman){
                     cnt+=x
@@ -1582,32 +1582,32 @@ export class Calculator{
             for(const p of this_.nowP){
                 if(p.isYao())return
             }
-            let value = 1
-            let name = "断幺九"
+            const value = 1
+            const name = "断幺九"
             cnt+=value
             yakuName.push(`${name}: ${value}翻`)
         }
         function CalcHoniisou(this_){
-            let typeCnt = [0,0,0,0]
+            const typeCnt = [0,0,0,0]
             for(const p of this_.nowP){
                 typeCnt[pType2Int(p.type)]=1
             }
             if(typeCnt[0]+typeCnt[1]+typeCnt[2]!=1||
                 typeCnt[3]!=1)return
-            let value = 3
-            let name = "混一色"
+            const value = 3
+            const name = "混一色"
             cnt+=value
             yakuName.push(`${name}: ${value}翻`)
         }
         function CalcChiniisou(this_){
-            let typeCnt = [0,0,0,0]
+            const typeCnt = [0,0,0,0]
             for(const p of this_.nowP){
                 typeCnt[pType2Int(p.type)]=1
             }
             if(typeCnt[0]+typeCnt[1]+typeCnt[2]!=1||
                 typeCnt[3]==1)return
-            let value = 6
-            let name = "清一色"
+            const value = 6
+            const name = "清一色"
             cnt+=value
             yakuName.push(`${name}: ${value}翻`)
         }
@@ -1616,8 +1616,8 @@ export class Calculator{
                 //不用判断字牌 一定不与清老头复合
                 if(!p.isYao())return 
             }
-            let value = 2
-            let name = "混老头"
+            const value = 2
+            const name = "混老头"
             cnt+=value
             yakuName.push(`${name}: ${value}翻`)
         }
@@ -1633,7 +1633,7 @@ export class Calculator{
         CalcChiniisou(this)
         CalcHonroutou(this)
         CalcTsuuiisou(this)
-        let res = new Result()
+        const res = new Result()
         if(yakuman > 0){
             res.han = yakuman
             res.yaku = yakumanName
@@ -1676,7 +1676,7 @@ export class Calculator{
 }
 
 export function isWaitFor(hand, pai){
-    let paiLeftNow = {}
+    const paiLeftNow = {}
     for(const x of ["m","s","p","z"]){
         paiLeftNow[x] = []
         for(let i=1;i<=9;i++){
@@ -1690,10 +1690,10 @@ export function isWaitFor(hand, pai){
     // 如果手里已经有四张 不算这个听牌 (虚听)
     if(paiLeftNow[pai.type][pai.num]<=0)return false;
 
-    let s = new State(NORTH,NORTH,[],RON,hand,[],[],[],pai,0)
-    let c = new Calculator()
+    const s = new State(NORTH,NORTH,[],RON,hand,[],[],[],pai,0)
+    const c = new Calculator()
 
-    let r = c.calculate(s)
+    const r = c.calculate(s)
     // console.log(r)
     if(r.han > 0){
         return true;

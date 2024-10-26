@@ -16,6 +16,7 @@
         </n-icon>
       </n-space>
     </header>
+    
     <div id="content">
       <router-view :rule="rule"/>
     </div>
@@ -119,6 +120,16 @@
 
         <p>
           如果有什么意见和想法，可以在 Github 上提出 Issue，或也可以联系我的邮箱 <a href="mailto://linlexiao2007@outlook.com">linlexiao2007@outlook.com</a>。
+        </p>
+
+        
+        <p>
+          目前的计划（按重要性排序）：
+          <ol>
+            <li>改进 UI</li>
+            <li>将项目迁移到TypeScript</li>
+            <li>编写测试用例</li>
+          </ol>
         </p>
       </div>
 
@@ -234,7 +245,7 @@
   }
 
   #content{
-    padding-top: calc(var(--nav-height)+ 2 * var(--nav-padding));
+    padding-top: var(--nav-height);
     padding-bottom: 2rem;
     padding-left: 2px;
     padding-right: 2px;

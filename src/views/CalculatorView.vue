@@ -111,12 +111,13 @@
   
 </template>
 
-<script>
+<script lang="ts">
 import PaiSelect from '../components/PaiSelect.vue'
 import BlockSelect from '../components/BlockSelect.vue'
-import * as util from '../store/util.js'
-import * as calc from '../store/calc'
 import { NButton, NSelect, NDivider, NCheckboxGroup, NCheckbox, NGrid, NGridItem, NInputNumber} from 'naive-ui'
+import { next, getType, getNumber } from '@/store/util'
+import { Calculator } from '@/store/calc'
+import { PositionType, Pai,Block,BlockType,Result,RIICHI,DOUBLE_RIICHI,IPPATSU,HAITEI_RAOYUE,HOUTEI_RAOYUI,RINNSHANN_KAIHOU,CHANKAN,TENHOU,CHIIHOU,TSUMO,RON,State} from '@/store/definition'
 
 export default {
   name: 'App',
@@ -181,7 +182,7 @@ export default {
       seat:"east",
       red:0,
       ponba:0,
-      result:new calc.Result(),
+      result:new Result(),
     }
   },
   methods:{
@@ -219,36 +220,36 @@ export default {
     },
     myCalculate(){
       function cvtWind(x){
-        if(x=='east')return calc.EAST;
-        if(x=='west')return calc.WEST;
-        if(x=='south')return calc.SOUTH;
-        if(x=='north')return calc.NORTH;
+        if(x=='east')return PositionType.EAST;
+        if(x=='west')return PositionType.WEST;
+        if(x=='south')return PositionType.SOUTH;
+        if(x=='north')return PositionType.NORTH;
       }
       function cvtPai(s){
-        return new calc.Pai(util.getType(s),util.getNumber(s))
+        return new Pai(getType(s),getNumber(s))
       }
       function cvtFuro(s){
         let open = true
-        let localType=calc.TRI
+        let localType=BlockType.TRI
         if(s.type=="ankan")open=false
 
-        if(s.type=="chi")localType = calc.SEQ
-        else if(s.type=="pon")localType = calc.TRI
-        else localType = calc.QUAD
-        return new calc.Block(localType,util.getType(s.name),util.getNumber(s.name),open)
+        if(s.type=="chi")localType = BlockType.SEQ
+        else if(s.type=="pon")localType = BlockType.TRI
+        else localType = BlockType.QUAD
+        return new Block(localType,getType(s.name),getNumber(s.name),open)
       }
       function cvtYaku(x){
-        if(x=="riichi")return calc.RIICHI
-        if(x=="double-riichi")return calc.DOUBLE_RIICHI
-        if(x=="ippatsu")return calc.IPPATSU
-        if(x=="haite")return calc.HAITEI_RAOYUE
-        if(x=="houte")return calc.HOUTEI_RAOYUI
-        if(x=="rinnshann")return calc.RINNSHANN_KAIHOU
-        if(x=="chankan")return calc.CHANKAN
-        if(x=="tenhou")return calc.TENHOU
-        if(x=="chiihou")return calc.CHIIHOU
+        if(x=="riichi")return RIICHI
+        if(x=="double-riichi")return DOUBLE_RIICHI
+        if(x=="ippatsu")return IPPATSU
+        if(x=="haite")return HAITEI_RAOYUE
+        if(x=="houte")return HOUTEI_RAOYUI
+        if(x=="rinnshann")return RINNSHANN_KAIHOU
+        if(x=="chankan")return CHANKAN
+        if(x=="tenhou")return TENHOU
+        if(x=="chiihou")return CHIIHOU
       }
-      const tAgariWay = this.agariWay=='tsumo'?calc.TSUMO:calc.RON;
+      const tAgariWay = this.agariWay=='tsumo'?TSUMO:RON;
       const tSeat = cvtWind(this.seat);
       const tField = cvtWind(this.field);
 
@@ -269,11 +270,11 @@ export default {
       let tYaku=[];
       for(const y of this.yakus)tYaku.push(cvtYaku(y));
 
-      let s = new calc.State(
+      let s = new State(
         tField,tSeat,tYaku,tAgariWay,tPai,tBlock,tDora,tUra,tAgariPai,this.red
       )
 
-      let c = new calc.Calculator()
+      let c = new Calculator()
       this.result = c.calculate(s,this.rule)
 
       if(this.agariWay=='tsumo'){
@@ -319,8 +320,8 @@ export default {
         }
         else if(x.type=='chi'){
           paiLeft[x.name]--;
-          paiLeft[util.next(x.name)]--;
-          paiLeft[util.next(util.next(x.name))]--;
+          paiLeft[next(x.name)]--;
+          paiLeft[next(next(x.name))]--;
         }
         else{
           paiLeft[x.name]-=4;
@@ -381,13 +382,13 @@ export default {
         }
         if(this.mode=="chi"){
           for(const name in rt){
-            if(util.getNumber(name)>7 || util.getType(name)=='z'){
+            if(getNumber(name)>7 || getType(name)=='z'){
               rt[name]=true
             }
             else{
               if(paiLeft[name]==0 ||
-                paiLeft[util.next(name)]==0 ||
-                paiLeft[util.next(util.next(name))]==0){
+                paiLeft[next(name)]==0 ||
+                paiLeft[next(next(name))]==0){
                 rt[name]=true
               }else{
                 rt[name]=false

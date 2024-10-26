@@ -1,26 +1,16 @@
-import {EMPTY_WIND,TSUMO,Result,IPPATSU,HOUTEI_RAOYUI,HAITEI_RAOYUE,RON,SEQ,RINNSHANN_KAIHOU,Calculator,State,NOMI,Pai,QUAD,RIICHI,TRI,DOUBLE_RIICHI,Block} from "./calc"
+import { Calculator } from "./calc"
+import { Pai, TSUMO, RON, RIICHI, HAITEI_RAOYUE, HOUTEI_RAOYUI, RINNSHANN_KAIHOU, DOUBLE_RIICHI, IPPATSU, State, Block, Result, Rule, PositionType, PaiType, BlockType, PaiNum } from "./definition"
+import { randInt, shuffle } from "./util"
 
-function shuffle(arr){
-    let len = arr.length;
-    let rand;
-    let temp;
-    while (len > 1) {
-        len--;
-        rand = Math.floor(Math.random() * len);
-        temp = arr[len];
-        arr[len] = arr[rand];
-        arr[rand] = temp;
-    }
-    return arr;
-}
+class Problem{ // 题目
+    hand: Pai[]
+    agariPai: Pai
+    furu: Block[]
+    dora: Pai[]
+    ura: Pai[]
+    flag: number
+    ans: Result
 
-function randInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //不含最大值，含最小值
-}
-
-class Problem{
     constructor(){
         this.hand = []
         this.agariPai = new Pai('z',1)
@@ -30,41 +20,47 @@ class Problem{
         this.flag = 0
         this.ans =  new Result()
     }
-
-    // THIS FUNCTION WAS NOT USED(2023/03/27) NOT KNOWING WHY
-    calculateResult(){
-        let cnt = 0
-        for(const p of this.hand){
-            if(p.redCnt != undefined){
-                cnt += p.redCnt
-            }
-        }
-        for(const p of this.furu){
-            if(p.redCnt != undefined){
-                cnt += p.redCnt
-            }
-        }
-        cnt+=this.agariPai.redCnt;
-        const s = new State(EMPTY_WIND,EMPTY_WIND,[],NOMI,this.hand,this.furu,
-            this.dora,this.ura,this.agariPai,cnt)
-        s.flag = this.flag
-
-        const c = new Calculator()
-        this.ans = c.calculate(s)
-    }
 }
 
+interface NumberLeft<T>{
+    [key:string]: T;
+}
 export class ProblemGenerator{
-    constructor(rule){
+    rule: Rule
+    tsumoChance : number
+    callChance : number
+    riichiChance : number
+    doubleRiichiChance : number
+    ippastsuChance : number
+    haiteiHouteiChance : number
+    rinnshannKaihouChance : number
+    chankanChance : number
+    kokushiChance : number
+    chituiChance : number
+
+    akaDoraChance : number
+    tripletChance : number
+    quadChance : number
+    closeQuadChance : number
+
+    doraCnt : number
+    paiLeft : NumberLeft<number[]>
+    akaDoraLeft :NumberLeft<number>
+
+    field : PositionType
+    seat : PositionType
+    c : Calculator
+
+    constructor(rule:Rule){
         this.rule=rule;
 
-        this.tsumoChance = 0.4
-        this.callChance = 0.5
-        this.riichiChance = 0.2
-        this.doubleRiichiChance = 0.01
-        this.ippastsuChance = 0.01
-        this.haiteiHouteiChance = 0.01
-        this.rinnshannKaihouChance = 0.01
+        this.tsumoChance = 0.4  // 自摸概率
+        this.callChance = 0.5 // 副露概率
+        this.riichiChance = 0.2 // 立直概率
+        this.doubleRiichiChance = 0.01 // W立直概率
+        this.ippastsuChance = 0.01 // 一发
+        this.haiteiHouteiChance = 0.01 // 海/河底
+        this.rinnshannKaihouChance = 0.01 //
         this.chankanChance = 0.01
         this.kokushiChance = 0.01
         this.chituiChance = 0.05
@@ -78,8 +74,8 @@ export class ProblemGenerator{
         this.paiLeft = {}
         this.akaDoraLeft = {}
 
-        this.field = EMPTY_WIND
-        this.seat = EMPTY_WIND
+        this.field = PositionType.EMPTY
+        this.seat = PositionType.EMPTY
 
         this.c = new Calculator()
     }
@@ -139,7 +135,7 @@ export class ProblemGenerator{
         }
         else if(this._testChance(this.chituiChance)){
             for(let tuiCnt = 0; tuiCnt<7;){
-                const tp = "mspz"[randInt(0,4)]
+                const tp = "mspz"[randInt(0,4)] as PaiType
                 let num;
 
                 if(tp=='z'){
@@ -319,7 +315,7 @@ export class ProblemGenerator{
         return rt
     }
 
-    _canGetTri(tp,num){
+    _canGetTri(tp:PaiType, num:PaiNum){
         return this._canGetPai(tp,num)&&this._canGetPai(tp,num+1)&&this._canGetPai(tp,num+2)
     }
 
@@ -328,7 +324,7 @@ export class ProblemGenerator{
         const rt = []
 
         do{
-            const tp = "msp"[randInt(0,3)]
+            const tp = "msp"[randInt(0,3)] as PaiType
             if(this._testChance(this.tripletChance)){
                 const num = randInt(2,9)
                 if(this._canGetPai(tp,num,3)){
@@ -374,7 +370,7 @@ export class ProblemGenerator{
         const rt = []
 
         do{
-            const tp = "mspz"[randInt(0,4)]
+            const tp = "mspz"[randInt(0,4)] as PaiType
             if(this._testChance(this.tripletChance) || tp =='z'){
                 let num;
                 if(tp=='z'){
@@ -410,7 +406,7 @@ export class ProblemGenerator{
         let success = false
         const rt = []
         do{
-            const tp = "msp"[randInt(0,3)]
+            const tp = "msp"[randInt(0,3)] as PaiType
             const num = randInt(2,9)
             if(this._canGetPai(tp,num,2)){
                 success = true
@@ -439,7 +435,7 @@ export class ProblemGenerator{
         let success = false
         const rt = []
         do{
-            const tp = "mspz"[randInt(0,4)]
+            const tp = "mspz"[randInt(0,4)] as PaiType
             let num;
             if(tp=='z'){
                 num = randInt(1,8)
@@ -460,14 +456,14 @@ export class ProblemGenerator{
 
     _generateRandomFuru(){
         for(;;){
-            const tp = "mspz"[randInt(0,4)]
+            const tp = "mspz"[randInt(0,4)] as PaiType
             if(this._testChance(this.tripletChance) || tp == 'z'){
-                let num;
+                let num: PaiNum;
                 if(tp=='z'){
-                    num = randInt(1,8)
+                    num = randInt(1,8) as PaiNum;
                 }
                 else{
-                    num = randInt(1,10)
+                    num = randInt(1,10) as PaiNum;
                 }
 
                 if(this._testChance(this.quadChance)){
@@ -483,7 +479,7 @@ export class ProblemGenerator{
                             redCnt += this._getPai(tp,num).redCnt
                         }
 
-                        const rt = new Block(QUAD,tp,num,isOpen)
+                        const rt = new Block(BlockType.QUAD,tp,num,isOpen)
                         rt.redCnt = redCnt
                         return rt
                     }
@@ -495,20 +491,20 @@ export class ProblemGenerator{
                             redCnt += this._getPai(tp,num).redCnt
                         }
 
-                        const rt = new Block(TRI,tp,num,true)
+                        const rt = new Block(BlockType.TRI,tp,num,true)
                         rt.redCnt = redCnt
                         return rt
                     }
                 }
             }
             else{
-                const num = randInt(1,8)
+                const num = randInt(1,8) as PaiNum
                 if(this._canGetTri(tp,num)){
                     let redCnt = 0
                     for(let i=0;i<3;i++){
                         redCnt += this._getPai(tp,num+i).redCnt
                     }
-                    const rt = new Block(SEQ,tp,num,true)
+                    const rt = new Block(BlockType.SEQ,tp,num,true)
                     rt.redCnt = redCnt
                     return rt
                 }
@@ -518,9 +514,9 @@ export class ProblemGenerator{
 
     _generateTanyaoFuru(){
         for(;;){
-            const tp = "msp"[randInt(0,3)]
+            const tp = "msp"[randInt(0,3)] as PaiType
             if(this._testChance(this.tripletChance)){
-                const num = randInt(2,9)
+                const num = randInt(2,9) as PaiNum
 
                 if(this._testChance(this.quadChance)){
                     let isOpen = true
@@ -535,7 +531,7 @@ export class ProblemGenerator{
                             redCnt += this._getPai(tp,num).redCnt
                         }
 
-                        const rt = new Block(QUAD,tp,num,isOpen)
+                        const rt = new Block(BlockType.QUAD,tp,num,isOpen)
                         rt.redCnt = redCnt
                         return rt
                     }
@@ -547,20 +543,20 @@ export class ProblemGenerator{
                             redCnt += this._getPai(tp,num).redCnt
                         }
 
-                        const rt = new Block(TRI,tp,num,true)
+                        const rt = new Block(BlockType.TRI,tp,num,true)
                         rt.redCnt = redCnt
                         return rt
                     }
                 }
             }
             else{
-                const num = randInt(2,7)
+                const num = randInt(2,7) as PaiNum
                 if(this._canGetTri(tp,num)){
                     let redCnt = 0
                     for(let i=0;i<3;i++){
                         redCnt += this._getPai(tp,num+i).redCnt
                     }
-                    const rt = new Block(SEQ,tp,num,true)
+                    const rt = new Block(BlockType.SEQ,tp,num,true)
                     rt.redCnt = redCnt
                     return rt
                 }
@@ -573,7 +569,7 @@ export class ProblemGenerator{
         shuffle(yakuHais)
 
         for(const x of yakuHais){
-            const num=x
+            const num = x as PaiNum
             const tp = 'z'
             if(this._testChance(this.quadChance)){
                 let isOpen = true
@@ -588,7 +584,7 @@ export class ProblemGenerator{
                         redCnt += this._getPai(tp,num).redCnt
                     }
 
-                    const rt = new Block(QUAD,tp,num,isOpen)
+                    const rt = new Block(BlockType.QUAD,tp,num,isOpen)
                     rt.redCnt = redCnt
                     return rt
                 }
@@ -600,7 +596,7 @@ export class ProblemGenerator{
                         redCnt += this._getPai(tp,num).redCnt
                     }
 
-                    const rt = new Block(TRI,tp,num,true)
+                    const rt = new Block(BlockType.TRI,tp,num,true)
                     rt.redCnt = redCnt
                     return rt
                 }
@@ -611,24 +607,24 @@ export class ProblemGenerator{
 
     _getRandomPai(){
         for(;;){
-            const tp = "mspz"[randInt(0,4)]
+            const tp = "mspz"[randInt(0,4)] as PaiType
             let num;
             if(tp=='z'){
-                num = randInt(1,8)
+                num = randInt(1,8) as PaiNum
             }
             else{
-                num = randInt(1,10)
+                num = randInt(1,10) as PaiNum
             }
 
             if(this._canGetPai(tp,num))return this._getPai(tp,num)
         }
     }
 
-    _canGetPai(tp,n,cnt=1){
+    _canGetPai(tp:PaiType,n:PaiNum,cnt=1){
         return this.paiLeft[tp][n]>=cnt
     }
 
-    _getPai(tp,n){
+    _getPai(tp:PaiType,n:PaiNum){
         if(n==5 && this.akaDoraLeft[tp] >=1 && tp!='z'){
             if(this._testChance(this.akaDoraChance)||
             this.akaDoraLeft[tp]>=this.paiLeft[tp][n]){
@@ -645,7 +641,7 @@ export class ProblemGenerator{
         return rt
     }
 
-    _testChance(chance){
+    _testChance(chance:number){
         return Math.random()<chance
     }
 }

@@ -139,7 +139,7 @@
 </template>
 
 <script>
-  import { Rule } from './store/calc'
+  import { Rule } from './store/definition'
   import { NModal,NRadioGroup,NRadioButton, NGrid, NGridItem, NIcon, NSpace} from 'naive-ui'
   import { SettingsRound,InfoRound } from '@vicons/material'
 

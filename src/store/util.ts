@@ -1,9 +1,12 @@
-export function getNumber(name){
+// 获得一张牌的数字部分
+export function getNumber(name:string){
   return parseInt(name[0])
 }
-export function getType(name){
+// 获得一张牌的类型部分
+export function getType(name:string){
   return name[1]
 }
-export function next(name){
+// 一张牌数字直接加一得到的牌
+export function next(name:string){
   return (parseInt(name[0])+1)+name[1]
 }

@@ -39,6 +39,11 @@ export function randInt(min:number, max:number) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min; //不含最大值，含最小值
 }
+// [min, max) 范围内随机整数
+export function choose(array:any[]) {
+  return array[randInt(0,array.length)]
+}
+
 
 // 测试是否含有某一位
 export function test(flag:number,value:number){

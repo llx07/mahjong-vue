@@ -1,7 +1,7 @@
 import { Calculator } from "./calc"
 import { Result, Rule } from "./definition"
 import { Pai, TSUMO, RON, RIICHI, HAITEI_RAOYUE, HOUTEI_RAOYUI, RINNSHANN_KAIHOU, DOUBLE_RIICHI, IPPATSU, State, Block, PositionType, PaiType, BlockType, PaiNum } from "./types"
-import { randInt, shuffle } from "./util"
+import { choose, randInt, shuffle } from "./util"
 
 class Problem{ // 题目
     hand: Pai[]
@@ -63,7 +63,7 @@ export class ProblemGenerator{
         this.haiteiHouteiChance = 0.01 // 海/河底
         this.rinnshannKaihouChance = 0.01 //
         this.chankanChance = 0.01
-        this.kokushiChance = 1
+        this.kokushiChance = 0.01
         this.chituiChance = 0.05
 
         this.akaDoraChance = 0.25
@@ -116,25 +116,35 @@ export class ProblemGenerator{
         const furu = []
     
         if(this._testChance(this.kokushiChance)){
-            const kokushiHand = [ new Pai('s',1),
-                                new Pai('s',9),
-                                new Pai('m',1),
-                                new Pai('m',9),
-                                new Pai('p',1),
-                                new Pai('p',9),
-                                new Pai('z',1),
-                                new Pai('z',2),
-                                new Pai('z',3),
-                                new Pai('z',4),
-                                new Pai('z',5),
-                                new Pai('z',6),
-                                new Pai('z',7),
-                            ]
-            console.log(kokushiHand)
-            shuffle(kokushiHand)
-            kokushiHand.push(kokushiHand[kokushiHand.length-1])
-            hand = kokushiHand
-            console.log(hand)
+            hand = [ new Pai('s',1),
+                    new Pai('s',9),
+                    new Pai('m',1),
+                    new Pai('m',9),
+                    new Pai('p',1),
+                    new Pai('p',9),
+                    new Pai('z',1),
+                    new Pai('z',2),
+                    new Pai('z',3),
+                    new Pai('z',4),
+                    new Pai('z',5),
+                    new Pai('z',6),
+                    new Pai('z',7),
+                ]
+            const tmp = [ new Pai('s',1),
+                new Pai('s',9),
+                new Pai('m',1),
+                new Pai('m',9),
+                new Pai('p',1),
+                new Pai('p',9),
+                new Pai('z',1),
+                new Pai('z',2),
+                new Pai('z',3),
+                new Pai('z',4),
+                new Pai('z',5),
+                new Pai('z',6),
+                new Pai('z',7),
+            ]
+            hand.push(choose(tmp))
         }
         else if(this._testChance(this.chituiChance)){
             for(let tuiCnt = 0; tuiCnt<7;){
@@ -256,6 +266,11 @@ export class ProblemGenerator{
             }
         }
 
+
+        // -------------------------------------------------------
+
+
+        // 对于生成好的 hand 数组（dora,ura）进行处理
         hand.sort()
         const agariIndex = randInt(0,hand.length)
 

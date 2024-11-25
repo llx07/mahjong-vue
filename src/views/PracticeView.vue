@@ -58,13 +58,13 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
   import PaiSelect from '@/components/PaiSelect.vue'
   import BlockSelect from '@/components/BlockSelect.vue'
   import { NInput, NButton } from 'naive-ui'
 
   import {ProblemGenerator} from '@/store/problem'
-  import {CHIIHOU,HOUTEI_RAOYUI,FIELD_WEST,DOUBLE_RIICHI,CHANKAN,HAITEI_RAOYUE,RIICHI,SEAT_NORTH,SEAT_WEST,RON,RINNSHANN_KAIHOU,TENHOU,FIELD_SOUTH,SEAT_EAST,IPPATSU,TSUMO,FIELD_NORTH,FIELD_EAST,SEAT_SOUTH} from '@/store/definition'
+import { CHIIHOU, HOUTEI_RAOYUI, FIELD_WEST, DOUBLE_RIICHI, CHANKAN, HAITEI_RAOYUE, RIICHI, SEAT_NORTH, SEAT_WEST, RON, RINNSHANN_KAIHOU, TENHOU, FIELD_SOUTH, SEAT_EAST, IPPATSU, TSUMO, FIELD_NORTH, FIELD_EAST, SEAT_SOUTH } from "@/store/types"
   import {test} from '@/store/util'
 
   export default{

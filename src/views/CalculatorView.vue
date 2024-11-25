@@ -111,13 +111,14 @@
   
 </template>
 
-<script lang="ts">
+<script>
 import PaiSelect from '../components/PaiSelect.vue'
 import BlockSelect from '../components/BlockSelect.vue'
 import { NButton, NSelect, NDivider, NCheckboxGroup, NCheckbox, NGrid, NGridItem, NInputNumber} from 'naive-ui'
 import { next, getType, getNumber } from '@/store/util'
 import { Calculator } from '@/store/calc'
-import { PositionType, Pai,Block,BlockType,Result,RIICHI,DOUBLE_RIICHI,IPPATSU,HAITEI_RAOYUE,HOUTEI_RAOYUI,RINNSHANN_KAIHOU,CHANKAN,TENHOU,CHIIHOU,TSUMO,RON,State} from '@/store/definition'
+import { Result} from '@/store/definition'
+import { PositionType, Pai, Block, BlockType, RIICHI, DOUBLE_RIICHI, IPPATSU, HAITEI_RAOYUE, HOUTEI_RAOYUI, RINNSHANN_KAIHOU, CHANKAN, TENHOU, CHIIHOU, TSUMO, RON, State } from "@/store/types"
 
 export default {
   name: 'App',

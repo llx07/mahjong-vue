@@ -1,5 +1,6 @@
 import { Calculator } from "./calc"
-import { Pai, TSUMO, RON, RIICHI, HAITEI_RAOYUE, HOUTEI_RAOYUI, RINNSHANN_KAIHOU, DOUBLE_RIICHI, IPPATSU, State, Block, Result, Rule, PositionType, PaiType, BlockType, PaiNum } from "./definition"
+import { Result, Rule } from "./definition"
+import { Pai, TSUMO, RON, RIICHI, HAITEI_RAOYUE, HOUTEI_RAOYUI, RINNSHANN_KAIHOU, DOUBLE_RIICHI, IPPATSU, State, Block, PositionType, PaiType, BlockType, PaiNum } from "./types"
 import { randInt, shuffle } from "./util"
 
 class Problem{ // 题目
@@ -62,7 +63,7 @@ export class ProblemGenerator{
         this.haiteiHouteiChance = 0.01 // 海/河底
         this.rinnshannKaihouChance = 0.01 //
         this.chankanChance = 0.01
-        this.kokushiChance = 0.01
+        this.kokushiChance = 1
         this.chituiChance = 0.05
 
         this.akaDoraChance = 0.25
@@ -129,9 +130,11 @@ export class ProblemGenerator{
                                 new Pai('z',6),
                                 new Pai('z',7),
                             ]
+            console.log(kokushiHand)
             shuffle(kokushiHand)
             kokushiHand.push(kokushiHand[kokushiHand.length-1])
             hand = kokushiHand
+            console.log(hand)
         }
         else if(this._testChance(this.chituiChance)){
             for(let tuiCnt = 0; tuiCnt<7;){

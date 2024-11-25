@@ -1,4 +1,5 @@
-import { Block, BlockType, CHIIHOU, HandSet, MachiType, ManType, MENZEN, Pai, Pair, PointType, Result, RON, Rule, SEAT_EAST, State, TENHOU, TSUMO } from "./definition"
+import { Result, Rule } from "./definition"
+import { Block, BlockType, CHIIHOU, HandSet, MachiType, ManType, MENZEN, Pai, Pair, PointType, RON, SEAT_EAST, State, TENHOU, TSUMO } from "./types"
 import { pType2Int, test } from "./util"
 import { AkaDora, ChanKan, Chantaiyao, Chiihou, Chiniisou, Chinroutou, ChuurenPoutou, Daisangen, Daisuushi, Dora, DoubleRiichi, HaiteiRaoyue, Honiisou, Honroutou, HouteiRaoyui, Iipeikou, Ikkitsuukan, Ippatsu, Junchantaiyao, JunseiChuurenPoutou, MenzenTsumo, Pinfu, Riichi, RinshanKaihou, Ryanpeikou, Ryuuiisou, Sanankou, Sankantsu, SanshokuDoujun, SanshokuDoukou, Shousangen, Shousuushi, Suuankou, SuuankouTanki, Suukantsu, TanYao, Tenhou, Toitoi, Tsuuiisou, Ura, Yaku, YakuhaiCyuu, YakuhaiFieldEast, YakuhaiFieldNorth, YakuhaiFieldSouth, YakuhaiFieldWest, YakuhaiHako, YakuhaiHatsu, YakuhaiSeatEast, YakuhaiSeatNorth, YakuhaiSeatSouth, YakuhaiSeatWest } from "./yaku"
 
